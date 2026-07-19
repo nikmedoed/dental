@@ -1,0 +1,229 @@
+// Application shell, sidebar, topbar, and navigation.
+
+.app-shell {
+  min-height: 100vh;
+}
+.sidebar {
+  position: fixed;
+  inset: 0 auto 0 0;
+  width: 248px;
+  background: #fbfdfc;
+  border-right: 1px solid #e1eae8;
+  padding: 27px 18px 18px;
+  display: flex;
+  flex-direction: column;
+  z-index: 20;
+}
+.side-nav {
+  margin-top: 40px;
+  flex: 1;
+}
+.side-nav p {
+  margin: 26px 11px 9px;
+  font-size: 9px;
+  letter-spacing: 1.5px;
+  color: #a2aeac;
+  font-weight: 800;
+}
+.side-nav button {
+  width: 100%;
+  border: 0;
+  background: transparent;
+  padding: 11px 12px;
+  border-radius: 9px;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin: 3px 0;
+  color: #657573;
+  cursor: pointer;
+  text-align: left;
+  font-size: 13px;
+  font-weight: 600;
+  transition: 0.16s ease;
+}
+.side-nav button:hover {
+  background: #f0f6f4;
+  color: #1a5f5a;
+}
+.side-nav button.active {
+  background: #e3f3f0;
+  color: #107a74;
+  font-weight: 700;
+}
+.side-nav button span {
+  flex: 1;
+}
+.side-nav button em {
+  font-style: normal;
+  min-width: 22px;
+  text-align: center;
+  color: #147f79;
+  background: #fff;
+  border: 1px solid #cce4df;
+  border-radius: 8px;
+  font-size: 10px;
+  padding: 2px 5px;
+}
+.online-dot {
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: #36b991;
+  box-shadow: 0 0 0 3px #ddf4ec;
+}
+.privacy-card {
+  background: #edf6f3;
+  border: 1px solid #ddecea;
+  color: #24867e;
+  padding: 12px;
+  border-radius: 10px;
+  display: flex;
+  gap: 9px;
+  align-items: center;
+  margin-bottom: 12px;
+}
+.privacy-card span,
+.user-card > span:nth-child(2),
+.doctor-mini > span:last-child,
+.sync-status > span:nth-child(2),
+.data-actions button > span:nth-child(2),
+.report-option > span:nth-child(2) {
+  min-width: 0;
+  flex: 1;
+}
+.privacy-card b,
+.privacy-card small {
+  display: block;
+}
+.privacy-card b {
+  font-size: 10px;
+}
+.privacy-card small {
+  font-size: 8px;
+  color: #7a9995;
+  margin-top: 3px;
+}
+.user-card {
+  border: 0;
+  border-top: 1px solid #e8eeed;
+  background: none;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 15px 7px 2px;
+  text-align: left;
+  cursor: pointer;
+}
+.avatar,
+.doctor-avatar {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 34px;
+  height: 34px;
+  background: #cfebe5;
+  color: #126f69;
+  font-weight: 800;
+  border-radius: 50%;
+  font-size: 11px;
+  flex: none;
+}
+.user-card b,
+.user-card small,
+.doctor-mini b,
+.doctor-mini small {
+  display: block;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.user-card b {
+  font-size: 11px;
+}
+.user-card small {
+  color: #91a09e;
+  font-size: 9px;
+  margin-top: 3px;
+}
+.main {
+  margin-left: 248px;
+  min-height: 100vh;
+}
+.topbar {
+  height: 70px;
+  background: rgba(255, 255, 255, 0.93);
+  backdrop-filter: blur(16px);
+  border-bottom: 1px solid #e3ebe9;
+  display: flex;
+  align-items: center;
+  padding: 0 38px;
+  position: sticky;
+  top: 0;
+  z-index: 15;
+}
+.breadcrumbs {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  color: #94a19f;
+  font-size: 11px;
+}
+.breadcrumbs b {
+  color: #526462;
+}
+.top-actions {
+  margin-left: auto;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+.sync-pill {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  color: #79908c;
+  font-size: 9px;
+  margin-right: 7px;
+}
+.sync-pill i {
+  width: 7px;
+  height: 7px;
+  background: #48b992;
+  border-radius: 50%;
+  box-shadow: 0 0 0 3px #e3f6ef;
+}
+.notification {
+  position: relative;
+}
+.notification i {
+  position: absolute;
+  width: 6px;
+  height: 6px;
+  background: #ef796c;
+  border: 2px solid white;
+  box-sizing: content-box;
+  top: 6px;
+  right: 6px;
+  border-radius: 50%;
+}
+.mobile-nav,
+.mobile-brand {
+  display: none;
+}
+.logout-button {
+  width: 30px;
+  height: 30px;
+  border: 0;
+  border-radius: 8px;
+  background: transparent;
+  color: #879592;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+}
+.logout-button:hover {
+  background: #edf4f2;
+  color: #167c75;
+}

@@ -1,0 +1,161 @@
+// Search, filters, timeline, and treatment summary.
+
+.toolbar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 10px 12px;
+  margin-bottom: 15px;
+  gap: 18px;
+}
+.search-box {
+  min-width: 300px;
+  display: flex;
+  align-items: center;
+  gap: 9px;
+  color: #93a19f;
+}
+.search-box input {
+  border: 0;
+  outline: 0;
+  background: transparent;
+  width: 100%;
+  font-size: 10px;
+  color: #304846;
+}
+.filter-tabs {
+  display: flex;
+  gap: 3px;
+  background: #f3f6f5;
+  border-radius: 8px;
+  padding: 3px;
+}
+.filter-tabs button {
+  border: 0;
+  background: transparent;
+  border-radius: 6px;
+  padding: 7px 11px;
+  font-size: 8px;
+  color: #7c8c89;
+  cursor: pointer;
+}
+.filter-tabs button.active {
+  background: #fff;
+  color: #147c76;
+  box-shadow: 0 2px 8px rgba(30, 70, 65, 0.08);
+  font-weight: 700;
+}
+.history-layout {
+  display: grid;
+  grid-template-columns: minmax(600px, 1fr) 245px;
+  gap: 15px;
+}
+.history-card {
+  padding: 5px 22px 18px;
+}
+.year-group {
+  display: grid;
+  grid-template-columns: 80px 1fr;
+  padding-top: 18px;
+}
+.year-label b,
+.year-label span {
+  display: block;
+}
+.year-label b {
+  font-size: 17px;
+}
+.year-label span {
+  font-size: 7px;
+  color: #9aa6a4;
+  margin-top: 4px;
+}
+.year-group .event-row {
+  grid-template-columns: 37px 34px minmax(140px, 1fr) 150px 20px;
+}
+.history-summary {
+  padding: 19px;
+  height: max-content;
+  position: sticky;
+  top: 90px;
+}
+.history-summary h3 {
+  font-size: 12px;
+}
+.summary-ring {
+  width: 124px;
+  height: 124px;
+  margin: 18px auto 22px;
+  border-radius: 50%;
+  background: conic-gradient(
+    #18857e 0 44%,
+    #795fa2 44% 67%,
+    #5d91b8 67% 81%,
+    #d2a44e 81% 91%,
+    #e5eaea 91%
+  );
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.summary-ring:before {
+  content: "";
+  position: absolute;
+  width: 94px;
+  height: 94px;
+  background: #fff;
+  border-radius: 50%;
+}
+.summary-ring div {
+  position: relative;
+  text-align: center;
+}
+.summary-ring b,
+.summary-ring span {
+  display: block;
+}
+.summary-ring b {
+  font-size: 23px;
+}
+.summary-ring span {
+  font-size: 8px;
+  color: #859592;
+}
+.history-summary ul,
+.report-copy ul {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+.history-summary li {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 6px 0;
+  font-size: 8px;
+  color: #71817f;
+}
+.history-summary li i {
+  width: 7px;
+  height: 7px;
+  border-radius: 2px;
+  padding: 0;
+}
+.history-summary li b {
+  margin-left: auto;
+  color: #364c49;
+}
+.summary-note {
+  margin-top: 16px;
+  padding: 11px;
+  border-radius: 9px;
+  background: #f4f8f7;
+  display: flex;
+  gap: 9px;
+  align-items: center;
+  color: #80908d;
+  font-size: 8px;
+}
+.summary-note b {
+  color: #4d615e;
+}

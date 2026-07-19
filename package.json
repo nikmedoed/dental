@@ -1,0 +1,24 @@
+{
+  "name": "denta-personal-record",
+  "private": true,
+  "version": "1.0.0",
+  "type": "module",
+  "scripts": {
+    "dev": "vite",
+    "build": "vite build",
+    "preview": "vite preview"
+  },
+  "dependencies": {
+    "@lucide/svelte": "latest",
+    "@sveltejs/vite-plugin-svelte": "latest",
+    "firebase": "latest",
+    "svelte": "latest",
+    "vite": "latest"
+  },
+  "devDependencies": {
+    "postcss": "^8.5.20",
+    "prettier": "^3.9.5",
+    "prettier-plugin-svelte": "^4.1.1",
+    "sass": "^1.101.0"
+  }
+}

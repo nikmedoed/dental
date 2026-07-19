@@ -1,0 +1,93 @@
+// Shared modal overlay, window, and event details.
+
+.modal-layer,
+.drawer-layer {
+  position: fixed;
+  inset: 0;
+  background: rgba(15, 35, 33, 0.42);
+  backdrop-filter: blur(4px);
+  z-index: 100;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 18px;
+  animation: fade 0.18s ease;
+}
+.modal {
+  width: min(570px, 100%);
+  max-height: 94vh;
+  overflow: auto;
+  background: white;
+  border-radius: 16px;
+  box-shadow: 0 25px 80px rgba(13, 40, 37, 0.24);
+  padding: 25px;
+  animation: pop 0.22s ease;
+}
+.modal-head {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 15px;
+  margin-bottom: 20px;
+}
+.modal-head h2 {
+  font-size: 20px;
+  letter-spacing: -0.5px;
+  margin-bottom: 5px;
+}
+.modal-head p {
+  font-size: 9px;
+  color: #80908d;
+  margin: 0;
+}
+.close-btn {
+  flex: none;
+}
+.modal-footer {
+  display: flex;
+  justify-content: flex-end;
+  gap: 8px;
+  border-top: 1px solid #eaf0ee;
+  margin-top: 19px;
+  padding-top: 16px;
+}
+.event-details {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 8px;
+}
+.event-details > div {
+  background: #f5f8f7;
+  border-radius: 9px;
+  padding: 11px;
+}
+.event-details span,
+.event-details b {
+  display: block;
+}
+.event-details span {
+  color: #8b9996;
+  font-size: 7px;
+  margin-bottom: 4px;
+}
+.event-details b {
+  font-size: 9px;
+}
+.note-box {
+  margin-top: 13px;
+  border: 1px solid #e2eae8;
+  border-radius: 9px;
+  padding: 13px;
+}
+.note-box span {
+  font-size: 7px;
+  color: #8d9a98;
+  letter-spacing: 0.8px;
+  font-weight: 800;
+}
+.note-box p {
+  margin: 7px 0 0;
+  font-size: 9px;
+  line-height: 1.65;
+  color: #566b68;
+}

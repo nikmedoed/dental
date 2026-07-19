@@ -1,0 +1,132 @@
+// Report cards, paper preview, and report tables.
+
+.report-grid {
+  display: grid;
+  grid-template-columns: minmax(560px, 1.5fr) minmax(300px, 0.8fr);
+  gap: 16px;
+}
+.report-feature {
+  display: grid;
+  grid-template-columns: 45% 1fr;
+  overflow: hidden;
+  min-height: 320px;
+}
+.report-preview {
+  background: linear-gradient(145deg, #ddece8, #f0f7f5);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 28px;
+}
+.paper {
+  background: white;
+  width: 180px;
+  height: 235px;
+  padding: 19px;
+  box-shadow: 0 12px 35px rgba(38, 74, 70, 0.15);
+  transform: rotate(-2deg);
+}
+.report-copy {
+  padding: 30px;
+}
+.badge {
+  display: inline-block;
+  font-size: 7px;
+  letter-spacing: 1px;
+  color: #137b75;
+  background: #e2f2ef;
+  padding: 5px 7px;
+  border-radius: 5px;
+  font-weight: 800;
+  margin-bottom: 12px;
+}
+.report-copy h2 {
+  font-size: 18px;
+  margin-bottom: 9px;
+}
+.report-copy > p {
+  font-size: 9px;
+  line-height: 1.7;
+  color: #778885;
+}
+.report-copy ul {
+  margin: 16px 0 21px;
+}
+.report-copy li {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 9px;
+  margin: 9px 0;
+}
+.report-copy li svg {
+  color: #188079;
+  background: #e5f3ef;
+  border-radius: 50%;
+  padding: 3px;
+  box-sizing: content-box;
+}
+.report-options {
+  display: grid;
+  grid-template-rows: repeat(3, 1fr);
+  gap: 11px;
+}
+.report-option {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  text-align: left;
+  padding: 16px;
+  border-radius: 12px;
+  cursor: pointer;
+}
+.report-option:hover {
+  border-color: #beded8;
+}
+.report-option b,
+.report-option small {
+  display: block;
+}
+.report-option b {
+  font-size: 10px;
+}
+.report-option small {
+  color: #82918f;
+  font-size: 8px;
+  line-height: 1.5;
+  margin-top: 4px;
+}
+.report-option > svg {
+  color: #9aa8a5;
+}
+.report-table {
+  margin-top: 16px;
+  padding: 19px 22px;
+}
+.report-table .logo-mark {
+  width: 30px;
+  height: 30px;
+  border-radius: 9px;
+}
+.report-table .logo-mark i {
+  width: 6px;
+  height: 13px;
+  top: 8px;
+}
+.report-table .logo-mark i:first-child {
+  left: 8px;
+}
+.report-table .logo-mark i:last-child {
+  right: 8px;
+}
+.tooth-number {
+  display: flex;
+  width: 28px;
+  height: 28px;
+  border-radius: 8px;
+  background: #e4f2ef;
+  color: #187c75;
+  align-items: center;
+  justify-content: center;
+  font-weight: 800;
+}

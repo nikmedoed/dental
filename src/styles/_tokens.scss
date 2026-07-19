@@ -1,0 +1,19 @@
+// Design tokens shared by every visual layer.
+:root {
+  font-family:
+    Manrope,
+    system-ui,
+    -apple-system,
+    sans-serif;
+  color: #183333;
+  background: #f4f7f6;
+  font-synthesis: none;
+  --ink: #183333;
+  --muted: #6f8080;
+  --line: #dfe8e6;
+  --teal: #147f79;
+  --teal-dark: #0d6965;
+  --teal-soft: #e3f3f0;
+  --surface: #ffffff;
+  --shadow: 0 3px 20px rgba(25, 65, 62, 0.06);
+}

@@ -1,0 +1,399 @@
+// Dashboard, statistics, odontogram, and appointment widgets.
+
+.welcome-row,
+.page-title {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-end;
+  gap: 24px;
+}
+.welcome-row h1,
+.page-title h1 {
+  font-size: 27px;
+  letter-spacing: -1px;
+  line-height: 1.2;
+  margin-bottom: 7px;
+}
+.welcome-row p,
+.page-title p {
+  color: #71817f;
+  font-size: 11px;
+  margin-bottom: 0;
+}
+.hero-add {
+  display: none;
+}
+.stats-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 13px;
+  margin: 24px 0 16px;
+}
+.stat-card {
+  min-width: 0;
+  background: #fff;
+  border: 1px solid #e1eae8;
+  box-shadow: var(--shadow);
+  border-radius: 12px;
+  min-height: 87px;
+  padding: 15px;
+  display: grid;
+  grid-template-columns: auto 1fr;
+  align-items: center;
+  gap: 11px;
+  position: relative;
+}
+.stat-icon,
+.option-icon,
+.episode-icon {
+  width: 39px;
+  height: 39px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 11px;
+  flex: none;
+}
+.stat-card strong,
+.stat-card > div:nth-child(2) > span {
+  display: block;
+}
+.stat-card strong {
+  font-size: 20px;
+  letter-spacing: -0.7px;
+  line-height: 1;
+}
+.stat-card > div:nth-child(2) > span {
+  font-size: 9px;
+  color: #71817f;
+  margin-top: 6px;
+}
+.stat-card > small {
+  position: absolute;
+  right: 14px;
+  bottom: 11px;
+  font-size: 8px;
+  color: #a1acaa;
+}
+.dashboard-grid {
+  display: grid;
+  grid-template-columns: minmax(700px, 1fr) 265px;
+  gap: 16px;
+  align-items: stretch;
+}
+.odontogram-card {
+  padding: 21px 23px 12px;
+  min-width: 0;
+}
+.segmented {
+  background: #f2f6f5;
+  padding: 3px;
+  border-radius: 8px;
+  display: flex;
+}
+.segmented button {
+  border: 0;
+  background: transparent;
+  border-radius: 6px;
+  padding: 6px 10px;
+  font-size: 8px;
+  color: #859390;
+  cursor: pointer;
+}
+.segmented button.active {
+  background: white;
+  color: #266f6a;
+  box-shadow: 0 2px 8px rgba(40, 70, 68, 0.08);
+  font-weight: 700;
+}
+.jaw-label {
+  margin: 19px auto 4px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 8px;
+  color: #a4afad;
+  font-size: 7px;
+  letter-spacing: 1px;
+}
+.jaw-label i {
+  width: 9px;
+  border-top: 1px solid #bec8c6;
+  transform: rotate(18deg);
+}
+.jaw-label.bottom i {
+  transform: rotate(-18deg);
+}
+.teeth-row {
+  display: flex;
+  align-items: flex-start;
+  justify-content: center;
+  gap: 4px;
+  position: relative;
+  min-width: 650px;
+}
+.teeth-row.lower {
+  align-items: flex-end;
+}
+.tooth {
+  width: 37px;
+  height: 61px;
+  padding: 4px 1px 2px;
+  border: 1px solid transparent;
+  background: transparent;
+  border-radius: 9px;
+  cursor: pointer;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4px;
+  transition: 0.17s ease;
+}
+.tooth:hover {
+  background: #edf7f5;
+  border-color: #cae6e1;
+  transform: translateY(-3px);
+}
+.tooth b {
+  font-size: 8px;
+  color: #798986;
+}
+.tooth.mint .tooth-crown {
+  background: #d7eee8;
+  border-color: #52aa9c;
+}
+.tooth.amber .tooth-crown {
+  background: #f8e8bd;
+  border-color: #d2a44e;
+}
+.tooth.coral .tooth-crown {
+  background: #f7d7d1;
+  border-color: #df766a;
+}
+.tooth.violet .tooth-crown {
+  background: #e6dbf2;
+  border-color: #9477b4;
+}
+.tooth.blue .tooth-crown {
+  background: #dceaf5;
+  border-color: #6c9fc1;
+}
+.tooth.muted .tooth-crown {
+  opacity: 0.38;
+  border-style: dashed;
+  background: #f0f2f2;
+}
+.tooth.muted .tooth-crown:after {
+  content: "×";
+  position: absolute;
+  font-size: 19px;
+  color: #8b9694;
+}
+.midline {
+  width: 12px;
+  flex: none;
+}
+.jaw-divider {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin: 7px auto;
+  color: #b1bcba;
+  font-size: 6px;
+  width: 93%;
+}
+.jaw-divider i {
+  height: 1px;
+  background: #edf1f0;
+  flex: 1;
+}
+.legend {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  align-items: center;
+  gap: 13px;
+  padding-top: 13px;
+  margin-top: 13px;
+  border-top: 1px solid #edf1f0;
+  color: #748481;
+  font-size: 7px;
+}
+.legend > span {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+}
+.legend > span i {
+  width: 7px;
+  height: 7px;
+  padding: 0;
+  border-radius: 2px;
+}
+.legend > button {
+  margin-left: auto;
+  border: 0;
+  background: none;
+  color: #147f79;
+  font-size: 8px;
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  cursor: pointer;
+  font-weight: 700;
+}
+.empty-dentition {
+  min-height: 205px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  color: #7e918e;
+  gap: 8px;
+}
+.empty-dentition svg {
+  color: #4ca29a;
+}
+.empty-dentition b {
+  font-size: 12px;
+}
+.empty-dentition span {
+  font-size: 9px;
+}
+.dashboard-aside {
+  display: grid;
+  grid-template-rows: 1fr auto;
+  gap: 14px;
+}
+.appointment-card {
+  padding: 17px;
+  background: linear-gradient(150deg, #f7fbfa, #fff);
+}
+.mini-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  color: #7d928f;
+  font-size: 8px;
+  letter-spacing: 1px;
+  font-weight: 800;
+}
+.mini-head button,
+.episode-top > button {
+  border: 0;
+  background: none;
+  color: #8a9997;
+  cursor: pointer;
+}
+.appointment-date {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin: 14px 0 7px;
+}
+.appointment-date strong {
+  font-size: 32px;
+  line-height: 1;
+  letter-spacing: -1px;
+}
+.appointment-date span {
+  font-size: 7px;
+  line-height: 1.5;
+  color: #82918f;
+  font-weight: 700;
+}
+.appointment-card h3 {
+  font-size: 13px;
+  margin: 8px 0 4px;
+}
+.appointment-card > p {
+  color: #7f8f8d;
+  font-size: 9px;
+  display: flex;
+  align-items: center;
+  gap: 5px;
+}
+.appointment-card > p i {
+  width: 6px;
+  height: 6px;
+  background: #6998be;
+  border-radius: 50%;
+}
+.doctor-mini {
+  display: flex;
+  align-items: center;
+  gap: 9px;
+  border-top: 1px solid #e5ecea;
+  padding: 12px 0;
+  margin-top: 12px;
+}
+.doctor-mini b {
+  font-size: 9px;
+}
+.doctor-mini small {
+  color: #93a09e;
+  font-size: 7px;
+  margin-top: 3px;
+}
+.appointment-card .secondary {
+  font-size: 8px;
+  min-height: 34px;
+}
+.share-card {
+  padding: 15px;
+  display: grid;
+  grid-template-columns: auto 1fr;
+  gap: 11px;
+  background: #ecf6f3;
+  border-color: #d9ebe7;
+  box-shadow: none;
+}
+.share-illustration {
+  width: 38px;
+  height: 38px;
+  border-radius: 11px;
+  background: #fff;
+  color: #25877f;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.share-card h3 {
+  font-size: 10px;
+  margin: 1px 0 4px;
+}
+.share-card p {
+  font-size: 8px;
+  color: #78908c;
+  line-height: 1.45;
+  margin: 0;
+}
+.share-card > button {
+  grid-column: 2;
+  border: 0;
+  background: none;
+  color: #167d76;
+  font-size: 8px;
+  padding: 2px 0;
+  display: flex;
+  align-items: center;
+  gap: 3px;
+  cursor: pointer;
+  font-weight: 700;
+  width: max-content;
+}
+.recent-card {
+  margin-top: 16px;
+  padding: 19px 22px 4px;
+}
+.text-button {
+  border: 0;
+  background: none;
+  color: #167e78;
+  display: flex;
+  align-items: center;
+  gap: 3px;
+  font-size: 9px;
+  cursor: pointer;
+  font-weight: 700;
+}
