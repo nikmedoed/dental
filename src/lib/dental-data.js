@@ -9,6 +9,24 @@ export const LOWER_TEETH = [
 export const ALL_TEETH = [...UPPER_TEETH, ...LOWER_TEETH];
 export const DEFAULT_TOOTH = 16;
 
+export const VISIT_TYPES = [
+  { value: "complaint", label: "Жалоба", icon: "!" },
+  { value: "inspection", label: "Осмотр", icon: "◎" },
+  { value: "treatment", label: "Лечение", icon: "◐" },
+  { value: "surgery", label: "Хирургия", icon: "⊕" },
+  { value: "hygiene", label: "Гигиена", icon: "✦" },
+  { value: "consultation", label: "Консультация", icon: "⌁" },
+  { value: "other", label: "Другое", icon: "＋" },
+];
+
+export const DEFAULT_CURRENCIES = [
+  { code: "AMD", symbol: "֏", name: "Армянский драм" },
+  { code: "KZT", symbol: "₸", name: "Казахстанский тенге" },
+  { code: "RUB", symbol: "₽", name: "Российский рубль" },
+  { code: "USD", symbol: "$", name: "Доллар США" },
+  { code: "EUR", symbol: "€", name: "Евро" },
+];
+
 export const TOOTH_STATUS = {
   healthy: {
     label: "Без записей",
@@ -18,12 +36,15 @@ export const TOOTH_STATUS = {
   treated: { label: "Вылечен", short: "Лечение", className: "mint" },
   watch: { label: "Наблюдение", short: "Контроль", className: "amber" },
   issue: { label: "Требует внимания", short: "Внимание", className: "coral" },
+  complaint: { label: "Активная жалоба", short: "Жалоба", className: "amber" },
+  resolved: { label: "Жалоба снята", short: "Жалоба снята", className: "neutral" },
   crown: { label: "Коронка", short: "Коронка", className: "violet" },
   implant: { label: "Имплант", short: "Имплант", className: "blue" },
   missing: { label: "Удалён", short: "Удалён", className: "muted" },
 };
 
 export const TREATMENT_KINDS = [
+  { value: "complaint", label: "Жалоба", icon: "!", status: "complaint" },
   { value: "filling", label: "Пломба", icon: "◐", status: "treated" },
   { value: "diagnosis", label: "Осмотр", icon: "◎", status: "watch" },
   {
@@ -47,7 +68,22 @@ export const SURFACES = [
   "Язычная",
 ];
 
+export const SURFACE_HELP = [
+  { name: "Жевательная", description: "верхняя поверхность боковых зубов" },
+  {
+    name: "Мезиальная",
+    description: "сторона зуба, направленная к центру ряда",
+  },
+  {
+    name: "Дистальная",
+    description: "сторона зуба, направленная от центра ряда",
+  },
+  { name: "Вестибулярная", description: "наружная сторона — к губе или щеке" },
+  { name: "Язычная", description: "внутренняя сторона — к языку или нёбу" },
+];
+
 export const ODONTOGRAM_LEGEND = [
+  "healthy",
   "treated",
   "watch",
   "issue",
@@ -59,19 +95,9 @@ export const ODONTOGRAM_LEGEND = [
 export const LOGIN_PREVIEW_TEETH = [18, 17, 16, 15, 14, 13, 12, 11];
 export const LOGIN_PREVIEW_FILLED_TEETH = [16, 11];
 
-export const NEXT_APPOINTMENT = {
-  day: "12",
-  month: "АВГ",
-  weekday: "СР",
-  title: "Контроль импланта",
-  tooth: 46,
-  clinic: "Nova Dental",
-  doctor: "Сергей Левин",
-  doctorInitials: "СЛ",
-  specialty: "Хирург-имплантолог",
-};
+export const NEXT_APPOINTMENT = null;
 
-export const SEED_EVENTS = [
+const LEGACY_SEED_EVENTS = [
   {
     id: "e1",
     tooth: 16,
@@ -186,7 +212,7 @@ export const SEED_EVENTS = [
   },
 ];
 
-export const TREATMENT_EPISODES = [
+const LEGACY_TREATMENT_EPISODES = [
   {
     id: "ep1",
     title: "Лечение кариеса 16 зуба",
@@ -224,6 +250,8 @@ export const TREATMENT_EPISODES = [
     color: "amber",
   },
 ];
+
+export const TREATMENT_EPISODES = [];
 
 export const HISTORY_FILTERS = [
   ["all", "Все"],

@@ -28,7 +28,7 @@
     ["reports", "Отчёты", FileText],
   ];
 
-  $: displayName = user?.displayName || "Алексей Смирнов";
+  $: displayName = user?.displayName || "Пользователь";
   $: initials = displayName
     .split(" ")
     .map((part) => part[0])

@@ -16,7 +16,8 @@
   import EventModal from "./components/modals/EventModal.svelte";
   import ShareModal from "./components/modals/ShareModal.svelte";
   import ToothDrawer from "./components/modals/ToothDrawer.svelte";
-  import { DEFAULT_TOOTH, SEED_EVENTS } from "./lib/dental-data.js";
+  import { DEFAULT_CURRENCIES, DEFAULT_TOOTH } from "./lib/dental-data.js";
+  import { SEED_CLINICS, SEED_DOCTORS, SEED_EVENTS } from "@personal-data";
   import {
     createPublicShare,
     firebaseEnabled,
@@ -25,19 +26,23 @@
     observeAuth,
     readPublicShare,
     replaceCloudEvents,
+    saveCloudDirectories,
     saveCloudEvent,
-    seedCloudIfEmpty,
+    subscribeToDirectories,
     subscribeToEvents,
   } from "./lib/firebase.js";
 
   let events = SEED_EVENTS;
+  let clinics = SEED_CLINICS;
+  let doctors = SEED_DOCTORS;
+  let currencies = DEFAULT_CURRENCIES;
   let page = "dashboard";
   let modal = null;
   let selectedTooth = DEFAULT_TOOTH;
   let selectedEvent = null;
   let user = firebaseEnabled
     ? null
-    : { uid: "local", displayName: "Алексей Смирнов" };
+    : { uid: "local", displayName: "Пользователь" };
   let authReady = !firebaseEnabled;
   let authError = "";
   let cloudConnected = false;
@@ -45,9 +50,11 @@
   let sharedLoading = false;
   let toast = "";
   let unsubscribeCloud = () => {};
+  let unsubscribeDirectories = () => {};
 
   onMount(() => {
     loadLocalEvents();
+    loadLocalDirectories();
     loadSharedView();
 
     const stopAuth = firebaseEnabled ? observeAuth(connectUser) : () => {};
@@ -57,6 +64,7 @@
     return () => {
       stopAuth();
       unsubscribeCloud();
+      unsubscribeDirectories();
       window.removeEventListener("keydown", closeOnEscape);
     };
   });
@@ -64,7 +72,61 @@
   function loadLocalEvents() {
     try {
       const saved = localStorage.getItem("denta-events");
-      if (saved) events = JSON.parse(saved);
+      if (!saved) return;
+      const parsed = JSON.parse(saved);
+      const isOldDemo = parsed.some((event) =>
+        ["e1", "e2", "e3", "e4", "e5", "e6", "e7", "e8"].includes(event.id),
+      );
+      const seedVersion = Number(
+        localStorage.getItem("denta-seed-version") || 0,
+      );
+      const correctedSeedIds =
+        seedVersion < 5
+          ? new Set(["complaints-2026-04-30", "denova-treatment-2026-05-22"])
+          : new Set();
+      const currentEvents = isOldDemo
+        ? []
+        : parsed.filter((event) => !correctedSeedIds.has(event.id));
+      events =
+        seedVersion < 5
+          ? [
+              ...SEED_EVENTS.filter(
+                (seedEvent) =>
+                  !currentEvents.some((event) => event.id === seedEvent.id),
+              ),
+              ...currentEvents,
+            ]
+          : currentEvents;
+      if (isOldDemo || seedVersion < 5) {
+        localStorage.setItem("denta-events", JSON.stringify(events));
+        localStorage.setItem("denta-seed-version", "5");
+      }
+    } catch {}
+  }
+
+  function loadLocalDirectories() {
+    try {
+      const saved = localStorage.getItem("denta-directories");
+      if (!saved) return;
+      const directories = JSON.parse(saved);
+      const oldClinicIds = [
+        "white-line",
+        "artdent",
+        "nova-dental",
+        "smile-lab",
+      ];
+      const hasOldDemo = (directories.clinics || []).some((clinic) =>
+        oldClinicIds.includes(clinic.id),
+      );
+      clinics = hasOldDemo ? SEED_CLINICS : directories.clinics || SEED_CLINICS;
+      doctors = hasOldDemo ? SEED_DOCTORS : directories.doctors || SEED_DOCTORS;
+      currencies = directories.currencies || DEFAULT_CURRENCIES;
+      if (hasOldDemo) {
+        localStorage.setItem(
+          "denta-directories",
+          JSON.stringify({ clinics, doctors, currencies }),
+        );
+      }
     } catch {}
   }
 
@@ -84,19 +146,33 @@
     user = nextUser;
     authReady = true;
     unsubscribeCloud();
+    unsubscribeDirectories();
     cloudConnected = false;
     if (!nextUser) return;
 
-    await seedCloudIfEmpty(nextUser.uid, events);
     unsubscribeCloud = subscribeToEvents(nextUser.uid, (cloudEvents) => {
       persist(cloudEvents);
       cloudConnected = true;
     });
+    unsubscribeDirectories = subscribeToDirectories(
+      nextUser.uid,
+      persistDirectories,
+    );
   }
 
   function persist(nextEvents) {
     events = nextEvents;
     localStorage.setItem("denta-events", JSON.stringify(events));
+  }
+
+  function persistDirectories(directories) {
+    clinics = directories.clinics || clinics;
+    doctors = directories.doctors || doctors;
+    currencies = directories.currencies || currencies;
+    localStorage.setItem(
+      "denta-directories",
+      JSON.stringify({ clinics, doctors, currencies }),
+    );
   }
 
   function navigate(nextPage) {
@@ -108,7 +184,7 @@
     modal = null;
   }
 
-  function openAdd(tooth = DEFAULT_TOOTH) {
+  function openAdd(tooth = null) {
     selectedTooth = tooth;
     modal = "add";
   }
@@ -123,17 +199,88 @@
     modal = "event";
   }
 
-  async function saveEvent(event) {
+  async function saveEvent({
+    event,
+    newClinic,
+    newDoctor,
+    updatedDoctor,
+    newCurrency,
+  }) {
+    const nextClinics = newClinic ? [...clinics, newClinic] : clinics;
+    const nextDoctors = newDoctor
+      ? [...doctors, newDoctor]
+      : updatedDoctor
+        ? doctors.map((doctor) =>
+            doctor.id === updatedDoctor.id ? updatedDoctor : doctor,
+          )
+        : doctors;
+    const nextCurrencies = newCurrency
+      ? [...currencies, newCurrency]
+      : currencies;
+    if (newClinic || newDoctor || updatedDoctor || newCurrency) {
+      persistDirectories({
+        clinics: nextClinics,
+        doctors: nextDoctors,
+        currencies: nextCurrencies,
+      });
+    }
     persist([event, ...events]);
-    if (firebaseEnabled && user) await saveCloudEvent(user.uid, event);
+    if (firebaseEnabled && user) {
+      await saveCloudEvent(user.uid, event);
+      if (newClinic || newDoctor || updatedDoctor || newCurrency) {
+        await saveCloudDirectories(user.uid, {
+          clinics: nextClinics,
+          doctors: nextDoctors,
+          currencies: nextCurrencies,
+        });
+      }
+    }
     closeModal();
     showToast("Запись добавлена");
   }
 
-  async function importEvents(nextEvents) {
-    persist(nextEvents);
+  async function resolveComplaint(tooth) {
+    const event = {
+      id: `complaint-resolved-${Date.now()}`,
+      type: "complaint",
+      kind: "complaint_resolved",
+      date: new Date().toISOString().slice(0, 10),
+      title: "Жалоба снята",
+      notes: "",
+      items: [
+        {
+          id: crypto.randomUUID(),
+          tooth,
+          kind: "complaint_resolved",
+          status: "resolved",
+          title: "Жалоба снята",
+          notes: "",
+          surfaces: [],
+          attachments: [],
+        },
+      ],
+      attachments: [],
+      createdAt: new Date().toISOString(),
+    };
+    persist([event, ...events]);
+    if (firebaseEnabled && user) await saveCloudEvent(user.uid, event);
+    showToast(`Жалоба по зубу ${tooth} снята`);
+  }
+
+  async function importData(data) {
+    persist(data.events);
+    persistDirectories({
+      clinics: data.clinics || clinics,
+      doctors: data.doctors || doctors,
+      currencies: data.currencies || currencies,
+    });
     if (firebaseEnabled && user) {
-      await replaceCloudEvents(user.uid, nextEvents);
+      await replaceCloudEvents(user.uid, data.events);
+      await saveCloudDirectories(user.uid, {
+        clinics: data.clinics || clinics,
+        doctors: data.doctors || doctors,
+        currencies: data.currencies || currencies,
+      });
     }
   }
 
@@ -146,8 +293,19 @@
     authError = "";
     try {
       await loginWithGoogle();
-    } catch {
-      authError = "Не удалось войти. Проверьте разрешённые домены в Firebase.";
+    } catch (error) {
+      const messages = {
+        "auth/unauthorized-domain":
+          "Этот домен не разрешён в Firebase Authentication → Settings → Authorized domains.",
+        "auth/operation-not-allowed":
+          "В Firebase Authentication не включён способ входа Google.",
+        "auth/popup-blocked":
+          "Браузер заблокировал окно входа Google. Разрешите всплывающие окна и повторите попытку.",
+        "auth/popup-closed-by-user": "Окно входа Google было закрыто.",
+      };
+      authError =
+        messages[error?.code] ||
+        `Не удалось войти через Google${error?.code ? ` (${error.code})` : ""}.`;
     }
   }
 
@@ -211,6 +369,9 @@
     {#if modal === "add"}
       <AddEventModal
         initialTooth={selectedTooth}
+        {clinics}
+        {doctors}
+        {currencies}
         onClose={closeModal}
         onSave={saveEvent}
       />
@@ -221,6 +382,7 @@
         onClose={closeModal}
         onAdd={openAdd}
         onOpenEvent={openEvent}
+        onResolveComplaint={resolveComplaint}
       />
     {:else if modal === "event" && selectedEvent}
       <EventModal event={selectedEvent} onClose={closeModal} />
@@ -233,9 +395,12 @@
     {:else if modal === "data"}
       <DataModal
         {events}
+        {clinics}
+        {doctors}
+        {currencies}
         {firebaseEnabled}
         onClose={closeModal}
-        onImport={importEvents}
+        onImport={importData}
       />
     {/if}
 

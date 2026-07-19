@@ -11,6 +11,9 @@
   import ModalShell from "../common/ModalShell.svelte";
 
   export let events = [];
+  export let clinics = [];
+  export let doctors = [];
+  export let currencies = [];
   export let firebaseEnabled = false;
   export let onClose = () => {};
   export let onImport = async () => {};
@@ -22,7 +25,14 @@
     const blob = new Blob(
       [
         JSON.stringify(
-          { version: 1, exportedAt: new Date().toISOString(), events },
+          {
+            version: 4,
+            exportedAt: new Date().toISOString(),
+            events,
+            clinics,
+            doctors,
+            currencies,
+          },
           null,
           2,
         ),
@@ -32,7 +42,7 @@
     const url = URL.createObjectURL(blob);
     const anchor = document.createElement("a");
     anchor.href = url;
-    anchor.download = "denta-backup.json";
+    anchor.download = `denta-backup-${new Date().toISOString().slice(0, 10)}.json`;
     anchor.click();
     URL.revokeObjectURL(url);
     message = "Архив сохранён";
@@ -46,13 +56,31 @@
       try {
         const parsed = JSON.parse(reader.result);
         if (!Array.isArray(parsed.events)) throw new Error();
-        await onImport(parsed.events);
+        await onImport({
+          events: parsed.events,
+          clinics: parsed.clinics,
+          doctors: parsed.doctors,
+          currencies: parsed.currencies,
+        });
         message = `Загружено записей: ${parsed.events.length}`;
       } catch {
         message = "Не удалось прочитать файл";
       }
     };
     reader.readAsText(file);
+  }
+
+  async function uploadCurrentData() {
+    const confirmed = window.confirm(
+      "Заменить данные текущего облачного аккаунта данными с этого устройства?",
+    );
+    if (!confirmed) return;
+    try {
+      await onImport({ events, clinics, doctors, currencies });
+      message = `В облако загружено записей: ${events.length}`;
+    } catch {
+      message = "Не удалось загрузить данные в облако";
+    }
   }
 </script>
 
@@ -98,6 +126,13 @@
       hidden
       on:change={importData}
     />
+    {#if firebaseEnabled}<button on:click={uploadCurrentData}
+        ><span class="option-icon violet"><Cloud size={21} /></span><span
+          ><b>Загрузить текущие данные в облако</b><small
+            >Заменить историю и справочники текущего аккаунта</small
+          ></span
+        ><ChevronRight size={18} /></button
+      >{/if}
   </div>
   {#if message}<div class="toast-inline"><Check size={17} />{message}</div>{/if}
   {#if !firebaseEnabled}<div class="firebase-note">

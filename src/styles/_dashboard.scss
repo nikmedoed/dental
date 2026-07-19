@@ -17,7 +17,7 @@
 .welcome-row p,
 .page-title p {
   color: #71817f;
-  font-size: 11px;
+  font-size: 13px;
   margin-bottom: 0;
 }
 .hero-add {
@@ -64,7 +64,8 @@
   line-height: 1;
 }
 .stat-card > div:nth-child(2) > span {
-  font-size: 9px;
+  font-size: 11px;
+  line-height: 1.25;
   color: #71817f;
   margin-top: 6px;
 }
@@ -72,14 +73,33 @@
   position: absolute;
   right: 14px;
   bottom: 11px;
-  font-size: 8px;
+  font-size: 9px;
   color: #a1acaa;
 }
 .dashboard-grid {
+  margin-top: 0;
   display: grid;
-  grid-template-columns: minmax(700px, 1fr) 265px;
+  grid-template-columns: 1fr;
   gap: 16px;
-  align-items: stretch;
+  align-items: start;
+}
+.odontogram-head-actions {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+.odontogram-add {
+  min-height: 34px;
+  padding: 0 11px;
+  font-size: 10px;
+}
+.share-top-button {
+  min-height: 34px;
+  padding: 0 11px;
+  border-color: #cfe4df;
+  background: #edf7f4;
+  color: #26736d;
+  font-size: 10px;
 }
 .odontogram-card {
   padding: 21px 23px 12px;
@@ -96,7 +116,7 @@
   background: transparent;
   border-radius: 6px;
   padding: 6px 10px;
-  font-size: 8px;
+  font-size: 10px;
   color: #859390;
   cursor: pointer;
 }
@@ -113,7 +133,7 @@
   align-items: center;
   gap: 8px;
   color: #a4afad;
-  font-size: 7px;
+  font-size: 9px;
   letter-spacing: 1px;
 }
 .jaw-label i {
@@ -148,6 +168,108 @@
   align-items: center;
   gap: 4px;
   transition: 0.17s ease;
+  position: relative;
+  z-index: 1;
+}
+.tooth::after {
+  content: attr(data-tooltip);
+  position: absolute;
+  left: 50%;
+  bottom: calc(100% + 7px);
+  transform: translateX(-50%) translateY(3px);
+  width: max-content;
+  max-width: 210px;
+  padding: 7px 9px;
+  border-radius: 7px;
+  background: #173c38;
+  color: white;
+  box-shadow: 0 6px 18px rgba(15, 45, 41, 0.2);
+  font-size: 9px;
+  font-weight: 600;
+  line-height: 1.3;
+  opacity: 0;
+  pointer-events: none;
+  white-space: nowrap;
+  transition: 0.14s ease;
+}
+.tooth:hover {
+  z-index: 8;
+}
+.tooth:hover::after,
+.tooth:focus-visible::after {
+  opacity: 1;
+  transform: translateX(-50%) translateY(0);
+}
+.tooth-figure {
+  width: 31px;
+  height: 42px;
+  display: block;
+  position: relative;
+}
+.tooth-figure svg {
+  width: 100%;
+  height: 100%;
+  overflow: visible;
+}
+.lower .tooth-figure svg {
+  transform: rotate(180deg);
+}
+.tooth-body,
+.implant-crown {
+  fill: #f9fbfa;
+  stroke: #9fb0ad;
+  stroke-width: 1.7;
+  stroke-linejoin: round;
+}
+.condition-treated .tooth-body {
+  fill: #d7eee8;
+  stroke: #45a091;
+}
+.condition-complaint .tooth-body {
+  fill: #fff1cf;
+  stroke: #d69d35;
+  stroke-dasharray: 2.5 1.5;
+}
+.condition-issue .tooth-body {
+  fill: #f9d8d2;
+  stroke: #d85e53;
+}
+.implant-crown {
+  fill: #dceaf5;
+  stroke: #518bb6;
+}
+.implant-post {
+  fill: #c5d9e8;
+  stroke: #518bb6;
+  stroke-width: 1.5;
+}
+.implant-thread {
+  fill: none;
+  stroke: #518bb6;
+  stroke-width: 1.2;
+}
+.tooth-outline {
+  fill: none;
+  stroke: #9ba6a4;
+  stroke-width: 2;
+  stroke-linecap: round;
+}
+.structure-missing .tooth-figure {
+  border: 1px dashed #bdc8c6;
+  border-radius: 11px;
+  background: #dfe4e3;
+  opacity: 1;
+}
+.structure-missing .tooth-outline {
+  stroke: #657270;
+}
+.structure-implant.condition-complaint .implant-crown {
+  stroke: #d69d35;
+  stroke-width: 2.5;
+}
+.structure-implant.condition-issue .implant-crown {
+  stroke: #d85e53;
+  stroke-width: 2.5;
 }
 .tooth:hover {
   background: #edf7f5;
@@ -155,8 +277,8 @@
   transform: translateY(-3px);
 }
 .tooth b {
-  font-size: 8px;
-  color: #798986;
+  font-size: 10px;
+  color: #526966;
 }
 .tooth.mint .tooth-crown {
   background: #d7eee8;
@@ -199,7 +321,8 @@
   gap: 8px;
   margin: 7px auto;
   color: #b1bcba;
-  font-size: 6px;
+  font-size: 9px;
+  font-weight: 800;
   width: 93%;
 }
 .jaw-divider i {
@@ -212,30 +335,69 @@
   flex-wrap: wrap;
   justify-content: center;
   align-items: center;
-  gap: 13px;
+  gap: 8px;
   padding-top: 13px;
   margin-top: 13px;
   border-top: 1px solid #edf1f0;
-  color: #748481;
-  font-size: 7px;
+  color: #415b58;
+  font-size: 10px;
 }
 .legend > span {
   display: flex;
   align-items: center;
-  gap: 5px;
+  gap: 7px;
+  padding: 6px 8px;
+  border: 1px solid #dce6e4;
+  border-radius: 8px;
+  background: #fff;
+  font-weight: 700;
 }
 .legend > span i {
-  width: 7px;
-  height: 7px;
+  width: 13px;
+  height: 13px;
   padding: 0;
   border-radius: 2px;
+  border: 1px solid currentColor;
+}
+.legend > span i.neutral {
+  background: #f9fbfa;
+  color: #8da09c;
+}
+.legend-natural,
+.legend-implant,
+.legend-missing,
+.legend-treated,
+.legend-complaint,
+.legend-issue {
+  background: #f9fbfa;
+  color: #8da09c;
+}
+.legend-implant {
+  background: #dceaf5;
+  color: #518bb6;
+}
+.legend-missing {
+  background: repeating-linear-gradient(45deg, #fff, #fff 2px, #d9dfde 2px, #d9dfde 3px);
+  color: #909b99;
+}
+.legend-treated {
+  background: #d7eee8;
+  color: #45a091;
+}
+.legend-complaint {
+  background: #fff1cf;
+  color: #d69d35;
+}
+.legend-issue {
+  background: #f9d8d2;
+  color: #d85e53;
 }
 .legend > button {
   margin-left: auto;
   border: 0;
   background: none;
   color: #147f79;
-  font-size: 8px;
+  font-size: 10px;
   display: flex;
   align-items: center;
   gap: 4px;
@@ -261,9 +423,63 @@
   font-size: 9px;
 }
 .dashboard-aside {
+  display: block;
+}
+.tooth-stats-card {
+  padding: 17px;
+  display: flex;
+  flex-direction: column;
+}
+.tooth-stats-list {
   display: grid;
-  grid-template-rows: 1fr auto;
-  gap: 14px;
+  gap: 4px;
+  margin-top: 10px;
+}
+.tooth-stat-row {
+  display: grid;
+  grid-template-columns: 16px 1fr auto;
+  align-items: center;
+  gap: 9px;
+  padding: 9px 0;
+  border-bottom: 1px solid #edf1f0;
+}
+.tooth-stat-row:last-child {
+  border-bottom: 0;
+}
+.tooth-stat-row .status-swatch {
+  width: 14px;
+  height: 14px;
+  border: 1px solid currentColor;
+  border-radius: 4px;
+}
+.tooth-stat-row .status-swatch.neutral {
+  background: #f9fbfa;
+  color: #8da09c;
+}
+.tooth-stat-row b,
+.tooth-stat-row small {
+  display: block;
+}
+.tooth-stat-row b {
+  color: #405653;
+  font-size: 10px;
+  line-height: 1.3;
+}
+.tooth-stat-row small {
+  margin-top: 3px;
+  color: #91a09d;
+  font-size: 8px;
+}
+.tooth-stat-row > strong {
+  color: #203c39;
+  font-size: 22px;
+}
+.stats-total {
+  margin-top: auto;
+  padding-top: 12px;
+  color: #849491;
+  font-size: 9px;
+  text-align: center;
 }
 .appointment-card {
   padding: 17px;
@@ -347,6 +563,75 @@
   background: #ecf6f3;
   border-color: #d9ebe7;
   box-shadow: none;
+  align-content: center;
+}
+.dental-stats-card {
+  display: flex;
+  align-items: stretch;
+  gap: 10px;
+  margin-top: 16px;
+  padding: 17px 20px;
+}
+.dental-stat-group {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  min-width: 0;
+}
+.dental-stat-group:first-child {
+  flex: 0 0 36%;
+}
+.condition-stat-group {
+  flex: 1;
+}
+.condition-stat-group {
+  padding-left: 10px;
+  border-left: 1px solid #e1e9e7;
+}
+.dental-stat-group > div {
+  min-width: 0;
+  padding: 7px 9px;
+  border: 1px solid #e0e8e6;
+  border-radius: 9px;
+  display: grid;
+  grid-template-columns: 10px 1fr auto;
+  align-items: center;
+  gap: 6px;
+  flex: 1;
+}
+.dental-stat-group i {
+  width: 9px;
+  height: 9px;
+  border-radius: 3px;
+  background: #f9fbfa;
+  border: 1px solid #8da09c;
+}
+.dental-stat-group i.stat-implant { background: #dceaf5; border-color: #518bb6; }
+.dental-stat-group i.stat-missing { background: #eef1f1; border-color: #909b99; }
+.dental-stat-group i.stat-treated { background: #d7eee8; border-color: #45a091; }
+.dental-stat-group i.stat-complaint { background: #fff1cf; border-color: #d69d35; }
+.dental-stat-group i.stat-issue { background: #f9d8d2; border-color: #d85e53; }
+.dental-stat-group b {
+  color: #4b605d;
+  font-size: 9px;
+  white-space: nowrap;
+}
+.dental-stat-group strong {
+  font-size: 16px;
+}
+.dental-stat-group i.stat-missing {
+  width: 14px;
+  height: 18px;
+  border-style: dashed;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: #dfe4e3;
+  border-color: #7f8b89;
+  color: #657270;
+  font-size: 12px;
+  font-style: normal;
+  line-height: 1;
 }
 .share-illustration {
   width: 38px;

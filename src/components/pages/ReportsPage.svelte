@@ -7,13 +7,13 @@
     Printer,
     Share2,
   } from "@lucide/svelte";
-  import { formatDate } from "../../lib/dental-utils.js";
+  import { eventTeeth, formatDate } from "../../lib/dental-utils.js";
 
   export let events = [];
   export let onShare = () => {};
   export let onData = () => {};
 
-  $: reportTeeth = [...new Set(events.map((event) => event.tooth))].slice(0, 3);
+  $: reportTeeth = [...new Set(events.flatMap(eventTeeth))].slice(0, 3);
   const generatedAt = formatDate(new Date().toISOString().slice(0, 10), true);
 </script>
 
@@ -88,13 +88,15 @@
     </div>
     <table>
       <thead
-        ><tr><th>Дата</th><th>Зуб</th><th>Лечение</th><th>Врач</th></tr></thead
+            ><tr><th>Дата</th><th>Зуб</th><th>Запись</th><th>Врач</th></tr></thead
       ><tbody
         >{#each events.slice(0, 5) as event}<tr
             ><td>{formatDate(event.date)}</td><td
-              ><span class="tooth-number">{event.tooth}</span></td
-            ><td><b>{event.title}</b><small>{event.clinic}</small></td><td
-              >{event.doctor}</td
+              ><span class="tooth-number"
+                >{eventTeeth(event).join(", ") || "—"}</span
+              ></td
+            ><td><b>{event.title}</b>{#if event.clinic}<small>{event.clinic}</small>{/if}</td><td
+              >{event.doctor || "—"}</td
             ></tr
           >{/each}</tbody
       >

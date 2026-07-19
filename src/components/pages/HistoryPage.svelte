@@ -4,7 +4,12 @@
     HISTORY_FILTERS,
     HISTORY_SUMMARY_GROUPS,
   } from "../../lib/dental-data.js";
-  import { formatDate, sortEvents } from "../../lib/dental-utils.js";
+  import {
+    eventEntries,
+    flattenDentalEntries,
+    formatDate,
+    sortEvents,
+  } from "../../lib/dental-utils.js";
   import EventRow from "../common/EventRow.svelte";
 
   export let events = [];
@@ -13,20 +18,32 @@
 
   let query = "";
   let filter = "all";
+  $: dentalEntries = flattenDentalEntries(events);
   $: filteredEvents = sortEvents(events).filter(
     (event) =>
-      (filter === "all" || event.kind === filter) &&
-      `${event.title} ${event.tooth} ${event.doctor} ${event.clinic}`
+      (filter === "all" ||
+        event.kind === filter ||
+        eventEntries(event).some((entry) => entry.kind === filter)) &&
+      `${event.title} ${event.doctor || ""} ${event.clinic || ""} ${eventEntries(
+        event,
+      )
+        .map((entry) => `${entry.tooth} ${entry.title} ${entry.notes}`)
+        .join(" ")}`
         .toLowerCase()
         .includes(query.toLowerCase()),
   );
   $: eventYears = [
-    ...new Set(filteredEvents.map((event) => event.date.slice(0, 4))),
+    ...new Set(
+      filteredEvents.map((event) =>
+        event.date.startsWith("0000-") ? "unknown" : event.date.slice(0, 4),
+      ),
+    ),
   ];
   $: firstEvent = [...events].sort((a, b) => a.date.localeCompare(b.date))[0];
   $: summaryGroups = HISTORY_SUMMARY_GROUPS.map((group) => ({
     ...group,
-    count: events.filter((event) => group.kinds.includes(event.kind)).length,
+    count: dentalEntries.filter((entry) => group.kinds.includes(entry.kind))
+      .length,
   }));
 </script>
 
@@ -66,13 +83,16 @@
       {#each eventYears as year}
         <div class="year-group">
           <div class="year-label">
-            <b>{year}</b><span
-              >{filteredEvents.filter((event) => event.date.startsWith(year))
-                .length} записей</span
+            <b>{year === "unknown" ? "Дата неизвестна" : year}</b><span
+              >{filteredEvents.filter((event) =>
+                year === "unknown"
+                  ? event.date.startsWith("0000-")
+                  : event.date.startsWith(year),
+              ).length} записей</span
             >
           </div>
           <div>
-            {#each filteredEvents.filter( (event) => event.date.startsWith(year) ) as event}<EventRow
+            {#each filteredEvents.filter( (event) => (year === "unknown" ? event.date.startsWith("0000-") : event.date.startsWith(year)) ) as event}<EventRow
                 {event}
                 onOpen={onOpenEvent}
               />{/each}

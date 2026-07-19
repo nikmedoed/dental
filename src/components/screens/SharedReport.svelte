@@ -1,6 +1,10 @@
 <script>
   import { Clock3, Info, Printer, ShieldCheck } from "@lucide/svelte";
-  import { formatDate } from "../../lib/dental-utils.js";
+  import {
+    eventEntries,
+    eventTeeth,
+    formatDate,
+  } from "../../lib/dental-utils.js";
   import Logo from "../common/Logo.svelte";
 
   export let data;
@@ -47,13 +51,21 @@
           ><tbody
             >{#each [...data.events].sort( (a, b) => b.date.localeCompare(a.date) ) as event}<tr
                 ><td>{formatDate(event.date)}</td><td
-                  ><span class="tooth-number">{event.tooth}</span></td
+                  ><span class="tooth-number"
+                    >{eventTeeth(event).join(", ") || "—"}</span
+                  ></td
                 ><td
-                  ><b>{event.title}</b>{#if event.surfaces?.length}<small
-                      >{event.surfaces.join(", ")}</small
+                  ><b>{event.title}</b>{#if eventEntries(event).length}<small
+                      >{eventEntries(event)
+                        .map((entry) => entry.title)
+                        .join("; ")}</small
                     >{/if}</td
-                ><td><b>{event.doctor}</b><small>{event.clinic}</small></td><td
-                  >{event.notes}</td
+                ><td><b>{event.doctor || "—"}</b>{#if event.clinic}<small>{event.clinic}</small>{/if}</td><td>
+                  {#if event.notes}<span>{event.notes}</span>{/if}
+                  {#each eventEntries(event).filter((entry) => entry.notes) as entry}
+                    <small><b>Зуб {entry.tooth}:</b> {entry.notes}</small>
+                  {/each}
+                </td
                 ></tr
               >{/each}</tbody
           >

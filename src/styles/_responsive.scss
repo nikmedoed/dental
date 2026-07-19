@@ -21,6 +21,18 @@
     grid-template-columns: 1fr 1fr;
     grid-template-rows: auto;
   }
+  .dental-stats-card {
+    flex-wrap: wrap;
+  }
+  .dental-stat-group {
+    flex: 1 1 100%;
+  }
+  .condition-stat-group {
+    padding-top: 10px;
+    padding-left: 0;
+    border-top: 1px solid #e1e9e7;
+    border-left: 0;
+  }
   .appointment-card {
     display: grid;
     grid-template-columns: auto 1fr;
@@ -241,6 +253,13 @@
   .odontogram-card .card-head {
     padding: 0 15px;
   }
+  .odontogram-head-actions {
+    flex-wrap: wrap;
+    justify-content: flex-end;
+  }
+  .share-top-button {
+    display: none;
+  }
   .segmented button {
     padding: 6px 7px;
   }
@@ -260,6 +279,10 @@
   .tooth-crown {
     width: clamp(17px, 4vw, 25px);
     height: 33px;
+  }
+  .tooth-figure {
+    width: clamp(18px, 4vw, 27px);
+    height: 36px;
   }
   .tooth-crown:before {
     width: 65%;
@@ -291,6 +314,15 @@
   }
   .dashboard-aside {
     grid-template-columns: 1fr;
+  }
+  .dental-stats-card {
+    gap: 12px;
+  }
+  .dental-stat-group {
+    flex-wrap: wrap;
+  }
+  .dental-stat-group > span {
+    width: 100%;
   }
   .appointment-card {
     display: block;
@@ -470,5 +502,89 @@
   }
   body {
     background: white;
+  }
+}
+
+@media (max-width: 900px) {
+  .clinic-cost-grid {
+    grid-template-columns: 1.2fr 0.7fr 0.9fr;
+  }
+  .visit-tooth-picker {
+    grid-template-columns: repeat(8, 1fr);
+  }
+}
+
+@media (max-width: 680px) {
+  .modal.add-modal {
+    max-height: 96vh;
+  }
+  .visit-modal-head,
+  .visit-section {
+    padding-left: 18px;
+    padding-right: 18px;
+  }
+  .visit-modal-head h2 {
+    font-size: 18px;
+  }
+  .visit-type-grid {
+    grid-template-columns: repeat(3, 1fr);
+  }
+  .clinic-cost-grid {
+    grid-template-columns: 1fr 1fr;
+  }
+  .clinic-cost-grid > label:first-child {
+    grid-column: 1 / -1;
+  }
+  .directory-create,
+  .currency-create {
+    grid-template-columns: 1fr;
+  }
+  .doctor-context {
+    margin-left: 0;
+  }
+  .directory-create > svg {
+    display: none;
+  }
+  .visit-tooth-picker {
+    grid-template-columns: repeat(8, 1fr);
+    gap: 5px;
+  }
+  .visit-tooth-picker button {
+    height: 38px;
+    font-size: 11px;
+  }
+  .tooth-picker-head,
+  .surface-heading {
+    align-items: flex-start;
+  }
+  .tooth-picker-head details[open] > p,
+  .surface-heading details[open] > div {
+    width: min(300px, calc(100vw - 36px));
+    right: -2px;
+  }
+  .entry-kind-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+  .tooth-entry-fields {
+    grid-template-columns: 1fr;
+  }
+  .tooth-entry-card > header {
+    grid-template-columns: 40px 1fr auto;
+  }
+  .tooth-kind-field {
+    grid-column: 1 / -1;
+    grid-template-columns: 1fr;
+    gap: 5px;
+  }
+  .tooth-entry-card {
+    padding: 13px;
+  }
+  .sticky-footer {
+    flex-wrap: wrap;
+    padding: 13px 18px;
+  }
+  .sticky-footer > div {
+    width: 100%;
+    margin-bottom: 4px;
   }
 }

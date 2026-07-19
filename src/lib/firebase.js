@@ -1,3 +1,5 @@
+import { stripFinancialData } from "./dental-utils.js";
+
 const config = {
   apiKey: import.meta.env.VITE_FIREBASE_API_KEY,
   authDomain: import.meta.env.VITE_FIREBASE_AUTH_DOMAIN,
@@ -7,8 +9,16 @@ const config = {
   appId: import.meta.env.VITE_FIREBASE_APP_ID,
 };
 
+export const dataMode = (import.meta.env.VITE_DATA_MODE || "local")
+  .trim()
+  .toLowerCase();
+
 export const firebaseEnabled = Boolean(
-  config.apiKey && config.authDomain && config.projectId && config.appId,
+  dataMode === "firebase" &&
+    config.apiKey &&
+    config.authDomain &&
+    config.projectId &&
+    config.appId,
 );
 
 let firebaseRuntime;
@@ -119,14 +129,57 @@ export async function replaceCloudEvents(uid, events) {
   await batch.commit();
 }
 
+function directoriesRef(runtime, uid) {
+  return runtime.firestoreApi.doc(
+    runtime.db,
+    "users",
+    uid,
+    "settings",
+    "directories",
+  );
+}
+
+export async function seedDirectoriesIfEmpty(uid, directories) {
+  const runtime = await initializeFirebase();
+  if (!runtime || !uid) return;
+  const reference = directoriesRef(runtime, uid);
+  const snapshot = await runtime.firestoreApi.getDoc(reference);
+  if (!snapshot.exists()) {
+    await runtime.firestoreApi.setDoc(reference, directories);
+  }
+}
+
+export function subscribeToDirectories(uid, callback) {
+  let cancelled = false;
+  let unsubscribe = () => {};
+  initializeFirebase().then((runtime) => {
+    if (!runtime || cancelled) return;
+    unsubscribe = runtime.firestoreApi.onSnapshot(
+      directoriesRef(runtime, uid),
+      (snapshot) => snapshot.exists() && callback(snapshot.data()),
+    );
+  });
+  return () => {
+    cancelled = true;
+    unsubscribe();
+  };
+}
+
+export async function saveCloudDirectories(uid, directories) {
+  const runtime = await initializeFirebase();
+  if (!runtime || !uid) return;
+  await runtime.firestoreApi.setDoc(directoriesRef(runtime, uid), directories);
+}
+
 export async function createPublicShare(uid, events, durationDays) {
   const token = crypto.randomUUID().replaceAll("-", "").slice(0, 18);
   const expiresAt = Date.now() + Number(durationDays) * 86_400_000;
+  const doctorSafeEvents = events.map(stripFinancialData);
   const payload = {
     ownerId: uid || "local",
     createdAt: Date.now(),
     expiresAt,
-    events,
+    events: doctorSafeEvents,
   };
   const runtime = await initializeFirebase();
   if (runtime && uid) {

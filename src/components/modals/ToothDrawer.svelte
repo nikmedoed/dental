@@ -1,16 +1,21 @@
 <script>
-  import { Plus, Sparkles, X } from "@lucide/svelte";
+  import { Check, Plus, Sparkles, X } from "@lucide/svelte";
   import { TOOTH_STATUS } from "../../lib/dental-data.js";
-  import { formatDate, sortEvents } from "../../lib/dental-utils.js";
+  import { formatDate, providerLabel, toothEntries, toothStateByTooth } from "../../lib/dental-utils.js";
 
   export let tooth;
   export let events = [];
   export let onClose = () => {};
   export let onAdd = () => {};
   export let onOpenEvent = () => {};
+  export let onResolveComplaint = () => {};
 
-  $: toothEvents = sortEvents(events).filter((event) => event.tooth === tooth);
+  $: toothEvents = toothEntries(events, tooth);
   $: status = TOOTH_STATUS[toothEvents[0]?.status || "healthy"];
+  $: toothState = toothStateByTooth(events)[tooth] || {
+    structure: "natural",
+    condition: "untreated",
+  };
 </script>
 
 <div
@@ -44,6 +49,12 @@
           >
         </div>
       </div>{/if}
+    {#if toothState.condition === "complaint"}
+      <div class="complaint-action">
+        <div><b>Активная жалоба</b><span>Отметьте, когда симптом больше не актуален.</span></div>
+        <button class="secondary" on:click={() => onResolveComplaint(tooth)}><Check size={16} />Снять жалобу</button>
+      </div>
+    {/if}
     <div class="drawer-section">
       <div class="section-title">
         <h3>История зуба</h3>
@@ -52,14 +63,14 @@
       {#if toothEvents.length}
         <div class="tooth-timeline">
           {#each toothEvents as event, index}<button
-              on:click={() => onOpenEvent(event)}
+              on:click={() => onOpenEvent(event.parentEvent || event)}
               ><span class="timeline-node"
                 ><i></i>{#if index < toothEvents.length - 1}<em></em>{/if}</span
               ><span
                 ><time>{formatDate(event.date, true)}</time><b>{event.title}</b>
                 <p>{event.notes}</p>
-                <small>{event.doctor} · {event.clinic}</small
-                >{#if event.surfaces.length}<span class="surface-tags"
+                {#if providerLabel(event)}<small>{providerLabel(event)}</small>{/if
+                }>{#if event.surfaces.length}<span class="surface-tags"
                     >{#each event.surfaces as surface}<i>{surface}</i
                       >{/each}</span
                   >{/if}</span

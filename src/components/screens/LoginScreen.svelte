@@ -31,8 +31,8 @@
       >
       {#if error}<p class="auth-error">{error}</p>{/if}
       <small class="login-terms"
-        >Продолжая, вы соглашаетесь с обработкой данных в вашем
-        Firebase-проекте.</small
+        >Доступ к данным ограничен вашим Google-аккаунтом и правилами
+        Firestore.</small
       >
     </div>
   </section>

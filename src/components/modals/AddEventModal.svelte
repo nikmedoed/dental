@@ -1,128 +1,175 @@
 <script>
-  import { Check, ChevronDown, Paperclip, X } from "@lucide/svelte";
-  import {
-    ALL_TEETH,
-    DEFAULT_TOOTH,
-    SURFACES,
-    TREATMENT_KINDS,
-  } from "../../lib/dental-data.js";
+  import { Check, X } from "@lucide/svelte";
+  import { DEFAULT_CURRENCIES, VISIT_TYPES } from "../../lib/dental-data.js";
   import ModalShell from "../common/ModalShell.svelte";
+  import DentalEntriesForm from "../visit/DentalEntriesForm.svelte";
+  import VisitDetailsForm from "../visit/VisitDetailsForm.svelte";
 
-  export let initialTooth = DEFAULT_TOOTH;
+  export let initialTooth = null;
+  export let clinics = [];
+  export let doctors = [];
+  export let currencies = DEFAULT_CURRENCIES;
   export let onClose = () => {};
   export let onSave = () => {};
 
-  let tooth = initialTooth || DEFAULT_TOOTH;
+  const NEW_VALUE = "__new__";
+  const EMPTY_VALUE = "";
+  let visitType = "inspection";
   let date = new Date().toISOString().slice(0, 10);
-  let kind = "filling";
-  let title = "";
-  let doctor = "";
-  let notes = "";
-  let surfaces = [];
-  $: currentKind =
-    TREATMENT_KINDS.find((item) => item.value === kind) || TREATMENT_KINDS[0];
+  let visitTitle = "";
+  let doctorId = EMPTY_VALUE;
+  let newDoctorName = "";
+  let newDoctorSpecialty = "";
+  let visitNotes = "";
+  let clinicId = EMPTY_VALUE;
+  let newClinicName = "";
+  let newClinicCity = "";
+  let amount = "";
+  let currencyCode = currencies[0]?.code || "AMD";
+  let newCurrencyCode = "";
+  let newCurrencySymbol = "";
+  let newCurrencyName = "";
+  let visitAttachments = [];
+  let items = [];
+  let error = "";
 
-  function toggleSurface(surface) {
-    surfaces = surfaces.includes(surface)
-      ? surfaces.filter((item) => item !== surface)
-      : [...surfaces, surface];
+  $: currentVisitType = VISIT_TYPES.find((item) => item.value === visitType);
+  $: selectedClinic = clinics.find((clinic) => clinic.id === clinicId);
+  $: selectedDoctor = doctors.find((doctor) => doctor.id === doctorId);
+  $: selectedCurrency = currencies.find(
+    (currency) => currency.code === currencyCode,
+  );
+
+  function buildNewClinic() {
+    if (clinicId !== NEW_VALUE || !newClinicName.trim()) return null;
+    return {
+      id: `clinic-${crypto.randomUUID()}`,
+      name: newClinicName.trim(),
+      city: newClinicCity.trim(),
+    };
+  }
+
+  function buildNewCurrency() {
+    if (currencyCode !== NEW_VALUE || !newCurrencyCode.trim()) return null;
+    return {
+      code: newCurrencyCode.trim().toUpperCase(),
+      symbol: newCurrencySymbol.trim(),
+      name: newCurrencyName.trim() || newCurrencyCode.trim().toUpperCase(),
+    };
+  }
+
+  function buildNewDoctor(clinic) {
+    if (doctorId !== NEW_VALUE || !newDoctorName.trim()) return null;
+    return {
+      id: `doctor-${crypto.randomUUID()}`,
+      name: newDoctorName.trim(),
+      specialty: newDoctorSpecialty.trim(),
+      clinicIds: clinic ? [clinic.id] : [],
+    };
+  }
+
+  function addClinicAssociation(doctor, clinic) {
+    if (!doctor || !clinic || doctor.clinicIds?.includes(clinic.id))
+      return null;
+    return {
+      ...doctor,
+      clinicIds: [...(doctor.clinicIds || []), clinic.id],
+    };
   }
 
   function save() {
-    onSave({
-      id: `e${Date.now()}`,
-      tooth: Number(tooth),
+    const newClinic = buildNewClinic();
+    const newCurrency = buildNewCurrency();
+    const clinic = newClinic || selectedClinic;
+    const currency = newCurrency || selectedCurrency;
+    if (clinicId === NEW_VALUE && !clinic) {
+      error = "Укажите название новой клиники или выберите «Не указана».";
+      return;
+    }
+    const newDoctor = buildNewDoctor(clinic);
+    const doctor = newDoctor || selectedDoctor;
+    if (doctorId === NEW_VALUE && !doctor) {
+      error = "Укажите имя нового врача или выберите «Не указан».";
+      return;
+    }
+    const updatedDoctor = newDoctor
+      ? null
+      : addClinicAssociation(doctor, clinic);
+    if (amount && !currency) {
+      error = "Выберите валюту или добавьте новую.";
+      return;
+    }
+
+    const event = {
+      id: `visit-${Date.now()}`,
+      type: visitType,
+      kind:
+        visitType === "inspection" ? "diagnosis" : items[0]?.kind || "other",
       date,
-      kind,
-      status: currentKind.status,
-      title: title || currentKind.label,
-      notes,
-      doctor: doctor || "Врач не указан",
-      clinic: "Клиника не указана",
-      surfaces,
-      cost: 0,
-    });
+      title: visitTitle.trim() || currentVisitType.label,
+      doctorId: doctor?.id || null,
+      doctor: doctor?.name || "",
+      doctorDetails: doctor
+        ? { id: doctor.id, name: doctor.name, specialty: doctor.specialty || "" }
+        : null,
+      clinicId: clinic?.id || null,
+      clinic: clinic?.name || "",
+      clinicDetails: clinic || null,
+      cost: amount ? Number(amount) : 0,
+      currency,
+      notes: visitNotes,
+      attachments: visitAttachments,
+      items,
+      createdAt: new Date().toISOString(),
+    };
+    onSave({ event, newClinic, newDoctor, updatedDoctor, newCurrency });
   }
 </script>
 
 <ModalShell className="add-modal" {onClose}>
-  <div class="modal-head">
+  <div class="modal-head visit-modal-head">
     <div>
-      <span class="eyebrow">НОВАЯ ЗАПИСЬ</span>
-      <h2>Что произошло?</h2>
-      <p>Заполните главное — детали можно добавить позже.</p>
+      <span class="eyebrow">НОВЫЙ ВИЗИТ</span>
+      <h2>Добавить осмотр или лечение</h2>
+      <p>
+        Общие данные визита и отдельная запись для каждого выбранного зуба.
+      </p>
     </div>
     <button class="close-btn" on:click={onClose}><X size={21} /></button>
   </div>
-  <div class="form-grid two">
-    <label
-      ><span>Зуб</span>
-      <div class="select-wrap">
-        <select bind:value={tooth}
-          >{#each ALL_TEETH as item}<option value={item}>{item}</option
-            >{/each}</select
-        ><ChevronDown size={17} />
-      </div></label
-    >
-    <label><span>Дата</span><input type="date" bind:value={date} /></label>
-  </div>
-  <div class="field-label">Тип записи</div>
-  <div class="kind-grid">
-    {#each TREATMENT_KINDS as item}<button
-        class:active={kind === item.value}
-        on:click={() => (kind = item.value)}
-        ><i>{item.icon}</i><span>{item.label}</span
-        >{#if kind === item.value}<Check size={14} />{/if}</button
-      >{/each}
-  </div>
-  <label class="form-field"
-    ><span>Название</span><input
-      bind:value={title}
-      placeholder={currentKind.label}
-    /></label
-  >
-  {#if kind === "filling"}
-    <div class="field-label">
-      Поверхности <small>можно выбрать несколько</small>
+
+  <VisitDetailsForm
+    {clinics}
+    {doctors}
+    {currencies}
+    newValue={NEW_VALUE}
+    bind:visitType
+    bind:date
+    bind:visitTitle
+    bind:doctorId
+    bind:newDoctorName
+    bind:newDoctorSpecialty
+    bind:visitNotes
+    bind:clinicId
+    bind:newClinicName
+    bind:newClinicCity
+    bind:amount
+    bind:currencyCode
+    bind:newCurrencyCode
+    bind:newCurrencySymbol
+    bind:newCurrencyName
+    bind:visitAttachments
+  />
+  <DentalEntriesForm {initialTooth} {visitType} bind:items />
+
+  {#if error}<div class="form-error">{error}</div>{/if}
+  <div class="modal-footer sticky-footer">
+    <div>
+      <b>{items.length}</b> зубов · <b>{visitAttachments.length}</b> общих файлов
     </div>
-    <div class="surface-picker">
-      {#each SURFACES as surface}<button
-          class:active={surfaces.includes(surface)}
-          on:click={() => toggleSurface(surface)}
-          >{#if surfaces.includes(surface)}<Check
-              size={13}
-            />{/if}{surface}</button
-        >{/each}
-    </div>
-  {/if}
-  <div class="form-grid two">
-    <label
-      ><span>Врач</span><input
-        bind:value={doctor}
-        placeholder="Имя врача"
-      /></label
-    >
-    <label
-      ><span>Стоимость <small>необязательно</small></span><input
-        inputmode="numeric"
-        placeholder="0 ₽"
-      /></label
-    >
-  </div>
-  <label class="form-field"
-    ><span>Заметки</span><textarea
-      bind:value={notes}
-      placeholder="Результат лечения, рекомендации, материалы…"
-    ></textarea></label
-  >
-  <button class="attachment-button"
-    ><Paperclip size={17} />Прикрепить снимок или документ
-    <span>до 20 МБ</span></button
-  >
-  <div class="modal-footer">
     <button class="secondary" on:click={onClose}>Отмена</button><button
       class="primary"
-      on:click={save}><Check size={17} />Сохранить запись</button
+      on:click={save}><Check size={17} />Сохранить визит</button
     >
   </div>
 </ModalShell>
