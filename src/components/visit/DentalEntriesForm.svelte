@@ -3,6 +3,7 @@
   import {
     LOWER_TEETH,
     SURFACES,
+    TOOTH_STATUS,
     TREATMENT_KINDS,
     UPPER_TEETH,
   } from "../../lib/dental-data.js";
@@ -12,6 +13,9 @@
   export let initialTooth = null;
   export let visitType = "inspection";
   export let items = [];
+  export let filesLoading = false;
+  let loadingByEntry = {};
+  $: filesLoading = Object.values(loadingByEntry).some(Boolean);
 
   const DISPLAY_TEETH = [
     ...[...UPPER_TEETH].reverse(),
@@ -28,7 +32,10 @@
 
   let previousVisitType = visitType;
 
-  if (initialTooth && !items.some((item) => item.tooth === Number(initialTooth))) {
+  if (
+    initialTooth &&
+    !items.some((item) => item.tooth === Number(initialTooth))
+  ) {
     items = [createEntry(Number(initialTooth))];
   }
 
@@ -108,7 +115,11 @@
   <div class="tooth-picker-head">
     <div>
       <b>Зубы этого визита</b>
-      <span>{items.length ? `Выбрано: ${items.length}` : "Нажмите на нужные номера"}</span>
+      <span
+        >{items.length
+          ? `Выбрано: ${items.length}`
+          : "Нажмите на нужные номера"}</span
+      >
     </div>
     <details>
       <summary><CircleHelp size={17} />Как читать номера?</summary>
@@ -119,18 +130,22 @@
     </details>
   </div>
 
-  <div class="visit-tooth-picker">
-    {#each DISPLAY_TEETH as tooth}<button
-        class:active={items.some((item) => item.tooth === tooth)}
-        on:click={() => toggleTooth(tooth)}
-        title={describeTooth(tooth)}>{tooth}</button
-      >{/each}
+  <p class="orientation-note">
+    Верхний ряд, затем нижний. Ваша левая сторона — слева; правая — справа.
+  </p>
+  <div class="tooth-picker-scroll">
+    <div class="visit-tooth-picker">
+      {#each DISPLAY_TEETH as tooth}<button
+          class:active={items.some((item) => item.tooth === tooth)}
+          on:click={() => toggleTooth(tooth)}
+          title={describeTooth(tooth)}>{tooth}</button
+        >{/each}
+    </div>
   </div>
-
   {#if !items.length}
     <div class="tooth-entry-empty">
-      Выберите один или несколько зубов выше. Здесь появятся компактные поля
-      для каждого из них.
+      Выберите один или несколько зубов выше. Здесь появятся компактные поля для
+      каждого из них.
     </div>
   {:else}
     <div class="tooth-entry-list">
@@ -143,7 +158,11 @@
               <small>{describeTooth(item.tooth)}</small>
             </div>
             <label class="tooth-kind-field">
-              <span>{item.kind === "complaint" ? "Тип записи" : "Диагноз или процедура"}</span>
+              <span
+                >{item.kind === "complaint"
+                  ? "Тип записи"
+                  : "Диагноз или процедура"}</span
+              >
               <select bind:value={item.kind} on:change={() => updateKind(item)}>
                 {#each TREATMENT_KINDS as kind}
                   <option value={kind.value}>{kind.label}</option>
@@ -157,33 +176,57 @@
             >
           </header>
 
-          <div class="tooth-entry-fields" class:without-surfaces={!SURFACE_KINDS.has(item.kind)}>
+          <label class="entry-status-field"
+            ><span>Состояние после визита</span><select
+              bind:value={item.status}
+            >
+              {#each Object.entries(TOOTH_STATUS).filter(([key]) => key !== "resolved" || item.kind === "complaint_resolved") as [key, status]}<option
+                  value={key}>{status.label}</option
+                >{/each}
+            </select></label
+          >
+          <div
+            class="tooth-entry-fields"
+            class:without-surfaces={!SURFACE_KINDS.has(item.kind)}
+          >
             {#if SURFACE_KINDS.has(item.kind)}
               <div class="entry-surfaces">
-                <div class="field-label">Поверхности <small>необязательно</small></div>
+                <div class="field-label">
+                  Поверхности <small>необязательно</small>
+                </div>
                 <div class="surface-picker tooth-surface-picker">
                   {#each SURFACES as surface}<button
                       class:active={item.surfaces.includes(surface)}
                       on:click={() => toggleSurface(item, surface)}
                       title={surface}
-                      >{#if item.surfaces.includes(surface)}<Check size={13} />{/if}
-                      <span><b>{SURFACE_LABELS[surface][0]}</b><small>{SURFACE_LABELS[surface][1]}</small></span></button
+                      >{#if item.surfaces.includes(surface)}<Check
+                          size={13}
+                        />{/if}
+                      <span
+                        ><b>{SURFACE_LABELS[surface][0]}</b><small
+                          >{SURFACE_LABELS[surface][1]}</small
+                        ></span
+                      ></button
                     >{/each}
                 </div>
               </div>
             {/if}
             <label class="tooth-note-field">
-              <span>{item.kind === "complaint" ? "Что беспокоит" : "Заметка по зубу"} <small>необязательно</small></span>
+              <span
+                >{item.kind === "complaint"
+                  ? "Что беспокоит"
+                  : "Заметка по зубу"} <small>необязательно</small></span
+              >
               <textarea
                 bind:value={item.notes}
                 placeholder={item.kind === "complaint"
                   ? "Что болит или беспокоит, когда началось, реакция на холодное или горячее…"
-                  : "Диагноз, материал, результат, рекомендации…"}
-              ></textarea>
+                  : "Диагноз, материал, результат, рекомендации…"}></textarea>
             </label>
           </div>
 
           <AttachmentPicker
+            bind:loading={loadingByEntry[item.id]}
             bind:attachments={item.attachments}
             scope="entry"
             label={`Файлы по зубу ${item.tooth} (например, снимок)`}

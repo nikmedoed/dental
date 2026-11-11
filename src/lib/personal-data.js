@@ -72,3 +72,6 @@ export const SEED_EVENTS = [
     ...provider,
   },
 ];
+
+// Private fixtures can provide a scoped, non-destructive correction for local data.
+export const repairPersonalEvents = (events) => events;

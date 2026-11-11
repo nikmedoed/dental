@@ -11,7 +11,7 @@
   const titles = {
     dashboard: "Обзор",
     history: "История лечения",
-    episodes: "Эпизоды",
+    episodes: "По зубам",
     reports: "Отчёты",
   };
 </script>

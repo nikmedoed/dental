@@ -35,11 +35,11 @@
   display: block;
 }
 .check-row b {
-  font-size: 9px;
+  font-size: 14px;
 }
 .check-row small {
   color: #93a09e;
-  font-size: 7px;
+  font-size: 14px;
   margin-top: 3px;
 }
 .duration-picker {
@@ -52,13 +52,13 @@
   background: white;
   border-radius: 9px;
   padding: 10px 6px;
-  font-size: 9px;
+  font-size: 14px;
   cursor: pointer;
   position: relative;
 }
 .duration-picker button small {
   display: block;
-  font-size: 6px;
+  font-size: 14px;
   color: #99a6a3;
   margin-top: 3px;
 }
@@ -89,7 +89,7 @@
   margin-bottom: 6px;
 }
 .success-state > p {
-  font-size: 9px;
+  font-size: 14px;
   color: #71827f;
   line-height: 1.6;
   max-width: 370px;
@@ -105,7 +105,7 @@
 }
 .copy-field > span {
   flex: 1;
-  font-size: 9px;
+  font-size: 14px;
   color: #526764;
 }
 .copy-field button {
@@ -117,7 +117,7 @@
   display: flex;
   align-items: center;
   gap: 5px;
-  font-size: 8px;
+  font-size: 14px;
   font-weight: 700;
   cursor: pointer;
 }
@@ -129,7 +129,7 @@
   color: #6c817e;
   border-radius: 9px;
   padding: 11px;
-  font-size: 8px;
+  font-size: 14px;
   line-height: 1.5;
   margin: 12px 0 17px;
 }
@@ -176,10 +176,10 @@
   display: block;
 }
 .sync-status b {
-  font-size: 9px;
+  font-size: 14px;
 }
 .sync-status small {
-  font-size: 7px;
+  font-size: 14px;
   color: #849592;
   margin-top: 4px;
 }
@@ -205,10 +205,10 @@
   border-bottom: 0;
 }
 .data-actions b {
-  font-size: 9px;
+  font-size: 14px;
 }
 .data-actions small {
-  font-size: 7px;
+  font-size: 14px;
   color: #8b9997;
   margin-top: 4px;
 }
@@ -223,7 +223,7 @@
   color: #22765f;
   padding: 9px 11px;
   border-radius: 8px;
-  font-size: 8px;
+  font-size: 14px;
   margin-top: 10px;
 }
 .firebase-note {
@@ -239,10 +239,10 @@
   color: #198179;
 }
 .firebase-note b {
-  font-size: 9px;
+  font-size: 14px;
 }
 .firebase-note small {
-  font-size: 7px;
+  font-size: 14px;
   line-height: 1.5;
   color: #879693;
   margin-top: 3px;
@@ -251,7 +251,7 @@
   border: 0;
   background: none;
   color: #147b74;
-  font-size: 8px;
+  font-size: 14px;
   font-weight: 700;
   cursor: pointer;
 }

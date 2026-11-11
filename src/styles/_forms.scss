@@ -10,7 +10,7 @@
 .form-grid label > span,
 .form-field > span {
   display: block;
-  font-size: 12px;
+  font-size: 16px;
   font-weight: 700;
   margin: 0 0 6px;
   color: #4f6260;
@@ -28,7 +28,7 @@
   border-radius: 9px;
   min-height: 43px;
   padding: 10px 12px;
-  font-size: 13px;
+  font-size: 16px;
   color: #304542;
   background: #fff;
 }
@@ -47,7 +47,7 @@
   color: #849390;
 }
 .field-label {
-  font-size: 12px;
+  font-size: 16px;
   font-weight: 700;
   color: #4f6260;
   margin: 16px 0 8px;
@@ -74,7 +74,7 @@
   justify-content: center;
   gap: 4px;
   cursor: pointer;
-  font-size: 10px;
+  font-size: 14px;
   color: #697976;
 }
 .kind-grid button i {
@@ -114,7 +114,7 @@
   background: #fff;
   border-radius: 15px;
   padding: 8px 11px;
-  font-size: 11px;
+  font-size: 14px;
   font-style: normal;
   display: flex;
   align-items: center;
@@ -140,7 +140,7 @@
   justify-content: center;
   align-items: center;
   gap: 7px;
-  font-size: 11px;
+  font-size: 14px;
   cursor: pointer;
 }
 .attachment-button span {
@@ -189,18 +189,18 @@
       border-radius: 9px;
       background: #177f79;
       color: white;
-      font-size: 11px;
+      font-size: 14px;
       font-weight: 800;
     }
 
     h3 {
       margin: 0 0 3px;
-      font-size: 15px;
+      font-size: 16px;
     }
     p {
       margin: 0;
       color: #81918e;
-      font-size: 10px;
+      font-size: 14px;
     }
   }
 }
@@ -223,7 +223,7 @@
     justify-content: center;
     gap: 4px;
     cursor: pointer;
-    font-size: 10px;
+    font-size: 14px;
 
     i {
       color: #54857f;
@@ -262,7 +262,7 @@
   label > span {
     display: block;
     margin-bottom: 6px;
-    font-size: 11px;
+    font-size: 14px;
     font-weight: 700;
   }
   input {
@@ -271,7 +271,7 @@
     border: 1px solid #d7e3e0;
     border-radius: 8px;
     padding: 9px 10px;
-    font-size: 12px;
+    font-size: 16px;
     background: white;
   }
 }
@@ -298,12 +298,12 @@
     display: block;
   }
   b {
-    font-size: 10px;
+    font-size: 14px;
   }
   small {
     margin-top: 2px;
     color: #7f918e;
-    font-size: 9px;
+    font-size: 14px;
   }
 }
 
@@ -324,7 +324,7 @@
     border-radius: 8px;
     background: #edf5f3;
     color: #52716c;
-    font-size: 10px;
+    font-size: 14px;
   }
   button {
     width: 20px;
@@ -352,12 +352,12 @@
     display: block;
   }
   b {
-    font-size: 12px;
+    font-size: 16px;
   }
   span {
     margin-top: 3px;
     color: #849390;
-    font-size: 10px;
+    font-size: 14px;
   }
   details {
     position: relative;
@@ -368,7 +368,7 @@
     align-items: center;
     gap: 5px;
     cursor: pointer;
-    font-size: 10px;
+    font-size: 14px;
     font-weight: 700;
     list-style: none;
   }
@@ -385,7 +385,7 @@
     background: white;
     box-shadow: 0 12px 35px rgba(25, 60, 56, 0.15);
     color: #526764;
-    font-size: 11px;
+    font-size: 14px;
     line-height: 1.55;
   }
   details p {
@@ -407,7 +407,7 @@
     background: white;
     color: #627471;
     cursor: pointer;
-    font-size: 10px;
+    font-size: 14px;
     font-weight: 700;
   }
   button:nth-child(n + 17) {
@@ -430,7 +430,7 @@
   border-radius: 9px;
   background: #f1f7f5;
   color: #637673;
-  font-size: 10px;
+  font-size: 14px;
 }
 
 .tooth-entry-empty {
@@ -441,7 +441,7 @@
   background: #f9fbfa;
   color: #71827f;
   text-align: center;
-  font-size: 12px;
+  font-size: 16px;
   line-height: 1.5;
 }
 
@@ -469,12 +469,12 @@
     display: block;
   }
   > header b {
-    font-size: 13px;
+    font-size: 16px;
   }
   > header small {
     margin-top: 2px;
     color: #7b8d89;
-    font-size: 10px;
+    font-size: 14px;
   }
   .attachment-button {
     margin-top: 12px;
@@ -491,7 +491,7 @@
 
   > span {
     color: #61736f;
-    font-size: 10px;
+    font-size: 14px;
     font-weight: 700;
   }
   select {
@@ -502,7 +502,7 @@
     background: white;
     color: #304542;
     padding: 7px 10px;
-    font-size: 12px;
+    font-size: 16px;
   }
 }
 
@@ -538,7 +538,7 @@
     display: block;
     margin-bottom: 6px;
     color: #4f6260;
-    font-size: 11px;
+    font-size: 14px;
     font-weight: 700;
   }
   label > span small {
@@ -554,7 +554,7 @@
     background: white;
     color: #304542;
     padding: 9px 11px;
-    font-size: 12px;
+    font-size: 16px;
   }
   textarea {
     height: 112px;
@@ -598,14 +598,14 @@
   }
   button b {
     overflow: hidden;
-    font-size: 10px;
+    font-size: 14px;
     text-overflow: ellipsis;
     white-space: nowrap;
   }
   button small {
     margin-top: 2px;
     color: #94a19f;
-    font-size: 8px;
+    font-size: 14px;
     font-weight: 500;
   }
   button.active small {
@@ -633,7 +633,7 @@
     justify-content: space-between;
     padding: 11px 13px;
     background: #f4f8f7;
-    font-size: 10px;
+    font-size: 14px;
   }
   > div:first-child span {
     color: #81908e;
@@ -651,12 +651,12 @@
     display: block;
   }
   article b {
-    font-size: 11px;
+    font-size: 14px;
   }
   article small {
     margin-top: 3px;
     color: #81918e;
-    font-size: 9px;
+    font-size: 14px;
   }
   article > button {
     width: 30px;
@@ -673,7 +673,7 @@
   align-items: center;
   gap: 3px;
   color: #708582;
-  font-size: 10px;
+  font-size: 14px;
 }
 .form-error {
   margin: 15px 28px 0;
@@ -681,7 +681,7 @@
   border-radius: 9px;
   background: #fff0ed;
   color: #b7564d;
-  font-size: 11px;
+  font-size: 14px;
 }
 .inline-error {
   margin: 12px 0 0;
@@ -698,6 +698,6 @@
   > div {
     margin-right: auto;
     color: #788a87;
-    font-size: 10px;
+    font-size: 14px;
   }
 }

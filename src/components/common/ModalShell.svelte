@@ -1,4 +1,5 @@
 <script>
+  import { dialogFocus } from "../../lib/dialog-focus.js";
   import { onMount } from "svelte";
 
   export let className = "";
@@ -16,5 +17,13 @@
   role="presentation"
   on:mousedown={(event) => event.target === event.currentTarget && onClose()}
 >
-  <div class="modal {className}"><slot /></div>
+  <div
+    class="modal {className}"
+    use:dialogFocus
+    role="dialog"
+    aria-modal="true"
+    aria-label="Запись и данные"
+  >
+    <slot />
+  </div>
 </div>

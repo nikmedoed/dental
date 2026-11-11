@@ -29,21 +29,31 @@ export const DEFAULT_CURRENCIES = [
 
 export const TOOTH_STATUS = {
   healthy: {
-    label: "Без записей",
-    short: "Нет данных",
+    label: "Здоров по осмотру",
+    short: "Здоров",
     className: "neutral",
   },
-  treated: { label: "Вылечен", short: "Лечение", className: "mint" },
+  treated: { label: "После лечения", short: "Лечение", className: "mint" },
   watch: { label: "Наблюдение", short: "Контроль", className: "amber" },
   issue: { label: "Требует внимания", short: "Внимание", className: "coral" },
   complaint: { label: "Активная жалоба", short: "Жалоба", className: "amber" },
-  resolved: { label: "Жалоба снята", short: "Жалоба снята", className: "neutral" },
+  resolved: {
+    label: "Жалоба снята",
+    short: "Жалоба снята",
+    className: "neutral",
+  },
   crown: { label: "Коронка", short: "Коронка", className: "violet" },
   implant: { label: "Имплант", short: "Имплант", className: "blue" },
   missing: { label: "Удалён", short: "Удалён", className: "muted" },
 };
 
 export const TREATMENT_KINDS = [
+  {
+    value: "complaint_resolved",
+    label: "Жалоба снята",
+    icon: "✓",
+    status: "resolved",
+  },
   { value: "complaint", label: "Жалоба", icon: "!", status: "complaint" },
   { value: "filling", label: "Пломба", icon: "◐", status: "treated" },
   { value: "diagnosis", label: "Осмотр", icon: "◎", status: "watch" },

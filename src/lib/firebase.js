@@ -15,10 +15,10 @@ export const dataMode = (import.meta.env.VITE_DATA_MODE || "local")
 
 export const firebaseEnabled = Boolean(
   dataMode === "firebase" &&
-    config.apiKey &&
-    config.authDomain &&
-    config.projectId &&
-    config.appId,
+  config.apiKey &&
+  config.authDomain &&
+  config.projectId &&
+  config.appId,
 );
 
 let firebaseRuntime;
@@ -87,7 +87,7 @@ export async function seedCloudIfEmpty(uid, fallbackEvents) {
   await batch.commit();
 }
 
-export function subscribeToEvents(uid, callback) {
+export function subscribeToEvents(uid, callback, onError = () => {}) {
   let cancelled = false;
   let unsubscribe = () => {};
   initializeFirebase().then((runtime) => {
@@ -97,8 +97,9 @@ export function subscribeToEvents(uid, callback) {
       api.collection(db, "users", uid, "dentalEvents"),
       (snapshot) => {
         const events = snapshot.docs.map((item) => item.data());
-        if (events.length) callback(events);
+        callback(events);
       },
+      onError,
     );
   });
   return () => {
@@ -149,7 +150,7 @@ export async function seedDirectoriesIfEmpty(uid, directories) {
   }
 }
 
-export function subscribeToDirectories(uid, callback) {
+export function subscribeToDirectories(uid, callback, onError = () => {}) {
   let cancelled = false;
   let unsubscribe = () => {};
   initializeFirebase().then((runtime) => {
@@ -157,6 +158,7 @@ export function subscribeToDirectories(uid, callback) {
     unsubscribe = runtime.firestoreApi.onSnapshot(
       directoriesRef(runtime, uid),
       (snapshot) => snapshot.exists() && callback(snapshot.data()),
+      onError,
     );
   });
   return () => {

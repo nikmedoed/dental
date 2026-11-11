@@ -7,7 +7,12 @@
     Printer,
     Share2,
   } from "@lucide/svelte";
-  import { eventTeeth, formatDate } from "../../lib/dental-utils.js";
+  import {
+    eventEntries,
+    eventTeeth,
+    formatDate,
+    sortEvents,
+  } from "../../lib/dental-utils.js";
 
   export let events = [];
   export let onShare = () => {};
@@ -47,8 +52,8 @@
         </p>
         <ul>
           <li><Check size={16} />Все {events.length} записей</li>
-          <li><Check size={16} />Карта состояния зубов</li>
-          <li><Check size={16} />Контакты клиник и врачей</li>
+          <li><Check size={16} />Записи по каждому зубу</li>
+          <li><Check size={16} />Указанные клиники и врачи</li>
         </ul>
         <button class="primary" on:click={() => window.print()}
           ><Printer size={18} />Печать / сохранить PDF</button
@@ -65,8 +70,8 @@
       >
       <button class="card report-option" on:click={() => window.print()}
         ><span class="option-icon violet"><FileDown size={22} /></span><span
-          ><b>Краткая выписка</b><small
-            >Только важное: диагнозы и выполненное лечение.</small
+          ><b>Выписка для печати</b><small
+            >Вся хронология, диагнозы и заметки по зубам.</small
           ></span
         ><ChevronRight size={20} /></button
       >
@@ -88,16 +93,22 @@
     </div>
     <table>
       <thead
-            ><tr><th>Дата</th><th>Зуб</th><th>Запись</th><th>Врач</th></tr></thead
+        ><tr><th>Дата</th><th>Зуб</th><th>Запись</th><th>Врач</th></tr></thead
       ><tbody
-        >{#each events.slice(0, 5) as event}<tr
+        >{#each sortEvents(events) as event}<tr
             ><td>{formatDate(event.date)}</td><td
               ><span class="tooth-number"
                 >{eventTeeth(event).join(", ") || "—"}</span
               ></td
-            ><td><b>{event.title}</b>{#if event.clinic}<small>{event.clinic}</small>{/if}</td><td
-              >{event.doctor || "—"}</td
-            ></tr
+            ><td
+              ><b>{event.title}</b>{#if event.notes}<p>
+                  {event.notes}
+                </p>{/if}{#each eventEntries(event) as entry}<p>
+                  <b>Зуб {entry.tooth}: {entry.title}</b>{#if entry.notes}<br
+                    />{entry.notes}{/if}
+                </p>{/each}{#if event.clinic}<small>{event.clinic}</small
+                >{/if}</td
+            ><td>{event.doctor || "—"}</td></tr
           >{/each}</tbody
       >
     </table>

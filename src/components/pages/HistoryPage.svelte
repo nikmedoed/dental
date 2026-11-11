@@ -24,13 +24,13 @@
       (filter === "all" ||
         event.kind === filter ||
         eventEntries(event).some((entry) => entry.kind === filter)) &&
-      `${event.title} ${event.doctor || ""} ${event.clinic || ""} ${eventEntries(
+      `${event.title} ${event.notes || ""} ${event.doctor || ""} ${event.clinic || ""} ${eventEntries(
         event,
       )
         .map((entry) => `${entry.tooth} ${entry.title} ${entry.notes}`)
         .join(" ")}`
         .toLowerCase()
-        .includes(query.toLowerCase()),
+        .includes(query.trim().toLowerCase()),
   );
   $: eventYears = [
     ...new Set(

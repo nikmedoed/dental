@@ -8,6 +8,7 @@
     Upload,
     X,
   } from "@lucide/svelte";
+  import { validateBackup } from "../../lib/dental-utils.js";
   import ModalShell from "../common/ModalShell.svelte";
 
   export let events = [];
@@ -55,7 +56,7 @@
     reader.onload = async () => {
       try {
         const parsed = JSON.parse(reader.result);
-        if (!Array.isArray(parsed.events)) throw new Error();
+        validateBackup(parsed);
         await onImport({
           events: parsed.events,
           clinics: parsed.clinics,
@@ -63,8 +64,8 @@
           currencies: parsed.currencies,
         });
         message = `Загружено записей: ${parsed.events.length}`;
-      } catch {
-        message = "Не удалось прочитать файл";
+      } catch (error) {
+        message = error.message || "Не удалось прочитать файл";
       }
     };
     reader.readAsText(file);

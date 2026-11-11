@@ -1,4 +1,5 @@
 <script>
+  import { localDate, validateBackup } from "./lib/dental-utils.js";
   import { onMount } from "svelte";
   import { Check } from "@lucide/svelte";
   import Sidebar from "./components/layout/Sidebar.svelte";
@@ -15,9 +16,8 @@
   import DataModal from "./components/modals/DataModal.svelte";
   import EventModal from "./components/modals/EventModal.svelte";
   import ShareModal from "./components/modals/ShareModal.svelte";
-  import ToothDrawer from "./components/modals/ToothDrawer.svelte";
   import { DEFAULT_CURRENCIES, DEFAULT_TOOTH } from "./lib/dental-data.js";
-  import { SEED_CLINICS, SEED_DOCTORS, SEED_EVENTS } from "@personal-data";
+  import { SEED_CLINICS, SEED_DOCTORS, SEED_EVENTS, repairPersonalEvents } from "@personal-data";
   import {
     createPublicShare,
     firebaseEnabled,
@@ -39,6 +39,7 @@
   let page = "dashboard";
   let modal = null;
   let selectedTooth = DEFAULT_TOOTH;
+  let mapTooth = null;
   let selectedEvent = null;
   let user = firebaseEnabled
     ? null
@@ -74,34 +75,19 @@
       const saved = localStorage.getItem("denta-events");
       if (!saved) return;
       const parsed = JSON.parse(saved);
-      const isOldDemo = parsed.some((event) =>
-        ["e1", "e2", "e3", "e4", "e5", "e6", "e7", "e8"].includes(event.id),
-      );
-      const seedVersion = Number(
-        localStorage.getItem("denta-seed-version") || 0,
-      );
-      const correctedSeedIds =
-        seedVersion < 5
-          ? new Set(["complaints-2026-04-30", "denova-treatment-2026-05-22"])
-          : new Set();
-      const currentEvents = isOldDemo
-        ? []
-        : parsed.filter((event) => !correctedSeedIds.has(event.id));
-      events =
-        seedVersion < 5
-          ? [
-              ...SEED_EVENTS.filter(
-                (seedEvent) =>
-                  !currentEvents.some((event) => event.id === seedEvent.id),
-              ),
-              ...currentEvents,
-            ]
-          : currentEvents;
-      if (isOldDemo || seedVersion < 5) {
-        localStorage.setItem("denta-events", JSON.stringify(events));
-        localStorage.setItem("denta-seed-version", "5");
+      validateBackup({ events: parsed });
+      const corrected = firebaseEnabled ? parsed : repairPersonalEvents(parsed);
+      if (corrected !== parsed) {
+        const backupKey = "denta-before-prosthetics-correction";
+        if (!localStorage.getItem(backupKey)) localStorage.setItem(backupKey, saved);
+        localStorage.setItem("denta-events", JSON.stringify(corrected));
       }
-    } catch {}
+      events = corrected;
+    } catch {
+      showToast(
+        "Не удалось прочитать сохранённую историю. Исходные данные остаются в хранилище.",
+      );
+    }
   }
 
   function loadLocalDirectories() {
@@ -136,10 +122,15 @@
     );
     if (!token) return;
     sharedLoading = true;
-    readPublicShare(token).then((result) => {
-      sharedData = result || { expired: true, events: [] };
-      sharedLoading = false;
-    });
+    readPublicShare(token)
+      .then((result) => {
+        sharedData = result || { expired: true, events: [] };
+        sharedLoading = false;
+      })
+      .catch(() => {
+        sharedData = { expired: true, events: [] };
+        sharedLoading = false;
+      });
   }
 
   async function connectUser(nextUser) {
@@ -150,19 +141,40 @@
     cloudConnected = false;
     if (!nextUser) return;
 
-    unsubscribeCloud = subscribeToEvents(nextUser.uid, (cloudEvents) => {
-      persist(cloudEvents);
-      cloudConnected = true;
-    });
+    unsubscribeCloud = subscribeToEvents(
+      nextUser.uid,
+      (cloudEvents) => {
+        try {
+          persist(cloudEvents);
+        } catch (error) {
+          events = cloudEvents;
+          showToast(error.message);
+        }
+        cloudConnected = true;
+      },
+      () => {
+        cloudConnected = false;
+        showToast(
+          "Не удалось синхронизировать историю. Проверьте подключение.",
+        );
+      },
+    );
     unsubscribeDirectories = subscribeToDirectories(
       nextUser.uid,
       persistDirectories,
+      () => showToast("Не удалось загрузить справочники из облака."),
     );
   }
 
   function persist(nextEvents) {
+    try {
+      localStorage.setItem("denta-events", JSON.stringify(nextEvents));
+    } catch {
+      throw new Error(
+        "Не удалось сохранить на устройстве: хранилище недоступно или заполнено. Уменьшите вложения и повторите попытку.",
+      );
+    }
     events = nextEvents;
-    localStorage.setItem("denta-events", JSON.stringify(events));
   }
 
   function persistDirectories(directories) {
@@ -185,13 +197,15 @@
   }
 
   function openAdd(tooth = null) {
+    selectedEvent = null;
     selectedTooth = tooth;
     modal = "add";
   }
 
   function openTooth(tooth) {
-    selectedTooth = tooth;
-    modal = "tooth";
+    mapTooth = tooth;
+    modal = null;
+    if (page !== "dashboard") navigate("dashboard");
   }
 
   function openEvent(event) {
@@ -224,7 +238,6 @@
         currencies: nextCurrencies,
       });
     }
-    persist([event, ...events]);
     if (firebaseEnabled && user) {
       await saveCloudEvent(user.uid, event);
       if (newClinic || newDoctor || updatedDoctor || newCurrency) {
@@ -235,8 +248,9 @@
         });
       }
     }
+    persist([event, ...events.filter((item) => item.id !== event.id)]);
     closeModal();
-    showToast("Запись добавлена");
+    showToast("Запись сохранена");
   }
 
   async function resolveComplaint(tooth) {
@@ -244,7 +258,7 @@
       id: `complaint-resolved-${Date.now()}`,
       type: "complaint",
       kind: "complaint_resolved",
-      date: new Date().toISOString().slice(0, 10),
+      date: localDate(),
       title: "Жалоба снята",
       notes: "",
       items: [
@@ -262,12 +276,17 @@
       attachments: [],
       createdAt: new Date().toISOString(),
     };
-    persist([event, ...events]);
     if (firebaseEnabled && user) await saveCloudEvent(user.uid, event);
+    persist([event, ...events.filter((item) => item.id !== event.id)]);
     showToast(`Жалоба по зубу ${tooth} снята`);
   }
 
   async function importData(data) {
+    validateBackup(data);
+    localStorage.setItem(
+      "denta-before-import",
+      JSON.stringify({ events, clinics, doctors, currencies }),
+    );
     persist(data.events);
     persistDirectories({
       clinics: data.clinics || clinics,
@@ -348,7 +367,9 @@
           {events}
           onAdd={openAdd}
           onShare={() => (modal = "share")}
+          selectedTooth={mapTooth}
           onOpenTooth={openTooth}
+          onResolveComplaint={resolveComplaint}
           onOpenEvent={openEvent}
           onNavigate={navigate}
         />
@@ -368,6 +389,7 @@
 
     {#if modal === "add"}
       <AddEventModal
+        initialEvent={selectedEvent}
         initialTooth={selectedTooth}
         {clinics}
         {doctors}
@@ -375,17 +397,16 @@
         onClose={closeModal}
         onSave={saveEvent}
       />
-    {:else if modal === "tooth"}
-      <ToothDrawer
-        tooth={selectedTooth}
-        {events}
-        onClose={closeModal}
-        onAdd={openAdd}
-        onOpenEvent={openEvent}
-        onResolveComplaint={resolveComplaint}
-      />
     {:else if modal === "event" && selectedEvent}
-      <EventModal event={selectedEvent} onClose={closeModal} />
+      <EventModal
+        event={selectedEvent}
+        onClose={closeModal}
+        onOpenTooth={openTooth}
+        onEdit={() => {
+          selectedTooth = null;
+          modal = "add";
+        }}
+      />
     {:else if modal === "share"}
       <ShareModal
         eventsCount={events.length}

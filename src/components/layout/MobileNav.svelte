@@ -10,7 +10,7 @@
     ["history", "История", History],
   ];
   const afterAdd = [
-    ["episodes", "Эпизоды", Archive],
+    ["episodes", "По зубам", Archive],
     ["reports", "Отчёты", FileText],
   ];
 </script>

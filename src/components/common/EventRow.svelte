@@ -1,11 +1,17 @@
 <script>
   import { ChevronRight, UserRound } from "@lucide/svelte";
-  import { eventIcon, eventTeeth } from "../../lib/dental-utils.js";
+  import {
+    eventIcon,
+    eventTeeth,
+    isValidDate,
+  } from "../../lib/dental-utils.js";
 
   export let event;
+  export let compact = false;
   export let onOpen = () => {};
 
-  $: dateUnknown = event.date?.startsWith("0000-");
+  $: dateUnknown =
+    !isValidDate(event.date) && !/^\d{4}-00-00$/.test(event.date || "");
   $: yearOnly = /^\d{4}-00-00$/.test(event.date || "");
   $: eventDate =
     dateUnknown || yearOnly ? null : new Date(`${event.date}T12:00:00`);
@@ -27,16 +33,22 @@
       ? `Зуб ${teeth[0]}`
       : `${teeth.length} зубов · ${teeth.join(", ")}`
     : "Без привязки к зубу";
-  $: contextLabel = [teethLabel, event.clinic].filter(Boolean).join(" · ");
+  $: contextLabel = [teethLabel, event.clinic, compact && event.doctor]
+    .filter(Boolean)
+    .join(" · ");
 </script>
 
-<button class="event-row" on:click={() => onOpen(event)}>
-  <span class="event-date"><b>{day}</b><small>{month}</small></span>
+<button class="event-row" class:compact on:click={() => onOpen(event)}>
+  <span class="event-date"
+    >{#if compact && eventDate}<b
+        >{event.date.slice(8, 10)}.{event.date.slice(5, 7)}</b
+      >{:else}<b>{day}</b><small>{month}</small>{/if}</span
+  >
   <span class="event-icon {event.type || event.kind}">{eventIcon(event)}</span>
   <span class="event-main"
     ><b>{event.title}</b><small>{contextLabel}</small></span
   >
-  {#if event.doctor}<span class="event-doctor"
+  {#if event.doctor && !compact}<span class="event-doctor"
       ><UserRound size={15} />{event.doctor}</span
     >{/if}
   <ChevronRight class="row-chevron" size={18} />

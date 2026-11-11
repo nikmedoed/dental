@@ -71,14 +71,14 @@
   border-style: dashed;
 }
 .large-tooth b {
-  font-size: 10px;
+  font-size: 14px;
 }
 .tooth-hero h2 {
   font-size: 19px;
   margin: 0 0 4px;
 }
 .tooth-hero p {
-  font-size: 9px;
+  font-size: 14px;
   color: #879592;
   margin: 0;
 }
@@ -89,7 +89,7 @@
 .current-state > span {
   display: block;
   color: #99a6a4;
-  font-size: 7px;
+  font-size: 14px;
   letter-spacing: 1px;
   font-weight: 800;
   margin-bottom: 9px;
@@ -108,10 +108,10 @@
   padding: 0;
 }
 .current-state b {
-  font-size: 10px;
+  font-size: 14px;
 }
 .current-state small {
-  font-size: 7px;
+  font-size: 14px;
   color: #96a3a1;
 }
 .drawer-section {
@@ -124,14 +124,14 @@
   justify-content: space-between;
 }
 .section-title h3 {
-  font-size: 12px;
+  font-size: 16px;
   margin: 0;
 }
 .section-title button {
   border: 0;
   background: none;
   color: #157e77;
-  font-size: 8px;
+  font-size: 14px;
   display: flex;
   align-items: center;
   gap: 4px;
@@ -141,16 +141,30 @@
 .tooth-timeline {
   margin-top: 15px;
 }
-.tooth-timeline > button {
+.tooth-timeline > article {
   display: grid;
-  grid-template-columns: 18px 1fr;
+  --timeline-date-height: 40px;
+  grid-template-columns: 18px minmax(0, 1fr);
   gap: 11px;
   width: 100%;
   background: none;
   border: 0;
   padding: 0 0 17px;
   text-align: left;
-  cursor: pointer;
+  user-select: text;
+}
+.tooth-timeline .timeline-details {
+  display: flex;
+  align-items: center;
+  width: 100%;
+  min-height: var(--timeline-date-height);
+  justify-content: space-between;
+}
+.tooth-timeline .timeline-open {
+  padding: 8px;
+}
+.timeline-details svg {
+  flex-shrink: 0;
 }
 .timeline-node {
   display: flex;
@@ -165,6 +179,8 @@
   border: 2px solid #ddf1ed;
   border-radius: 50%;
   box-sizing: content-box;
+  flex-shrink: 0;
+  margin-top: calc((var(--timeline-date-height) - 13px) / 2);
 }
 .timeline-node em {
   width: 1px;
@@ -179,24 +195,26 @@
   display: block;
 }
 .tooth-timeline time {
-  font-size: 7px;
+  font-size: 14px;
   color: #16817a;
   text-transform: uppercase;
   font-weight: 700;
-  margin-bottom: 5px;
 }
 .tooth-timeline b {
-  font-size: 10px;
+  font-size: 14px;
+  line-height: 1.4;
 }
 .tooth-timeline p {
-  font-size: 8px;
+  font-size: 14px;
   color: #70827f;
   line-height: 1.5;
   margin: 6px 0;
 }
 .tooth-timeline small {
   color: #94a19f;
-  font-size: 7px;
+  font-size: 14px;
+  line-height: 1.4;
+  margin-top: 4px;
 }
 .drawer-footer {
   position: sticky;
@@ -223,6 +241,17 @@
 .complaint-action span {
   display: block;
 }
-.complaint-action b { font-size: 11px; color: #855f20; }
-.complaint-action span { margin-top: 3px; font-size: 9px; color: #9a7b47; }
-.complaint-action button { min-height: 34px; padding: 0 10px; white-space: nowrap; }
+.complaint-action b {
+  font-size: 14px;
+  color: #855f20;
+}
+.complaint-action span {
+  margin-top: 3px;
+  font-size: 14px;
+  color: #9a7b47;
+}
+.complaint-action button {
+  min-height: 34px;
+  padding: 0 10px;
+  white-space: nowrap;
+}

@@ -8,25 +8,48 @@
     MoreHorizontal,
   } from "@lucide/svelte";
   import { TREATMENT_EPISODES } from "../../lib/dental-data.js";
-  import { formatDate } from "../../lib/dental-utils.js";
+  import {
+    eventTeeth,
+    formatDate,
+    sortEvents,
+    toothStateByTooth,
+  } from "../../lib/dental-utils.js";
 
   export let events = [];
   export let onOpenEvent = () => {};
+  $: states = toothStateByTooth(events);
+  $: episodes = [...new Set(events.flatMap(eventTeeth))]
+    .sort((a, b) => a - b)
+    .map((tooth) => ({
+      id: tooth,
+      tooth,
+      title: "История зуба " + tooth,
+      subtitle: "Все связанные записи по зубу",
+      status: states[tooth]?.needsAttention
+        ? "Требует внимания"
+        : "См. историю",
+      color: states[tooth]?.needsAttention ? "amber" : "teal",
+      date: formatDate(states[tooth]?.latestEntry?.date),
+    }));
 </script>
 
 <div class="page inner-page">
   <div class="page-title">
     <div>
       <span class="eyebrow">СВЯЗАННЫЕ СОБЫТИЯ</span>
-      <h1>Эпизоды лечения</h1>
-      <p>Весь путь от диагностики до завершения лечения.</p>
+      <h1>История по зубам</h1>
+      <p>
+        Связанные записи каждого зуба: от первого осмотра до последнего визита.
+      </p>
     </div>
-    <button class="secondary"><CircleHelp size={18} />Как это работает</button>
   </div>
+  {#if !episodes.length}<p class="empty-state">
+      Добавьте запись с номером зуба — здесь появится его история.
+    </p>{/if}
   <div class="episodes-grid">
-    {#each TREATMENT_EPISODES as episode}
+    {#each episodes as episode}
       {@const episodeEvents = events
-        .filter((event) => event.episodeId === episode.id)
+        .filter((event) => eventTeeth(event).includes(episode.tooth))
         .sort((a, b) => a.date.localeCompare(b.date))}
       <article class="card episode-card">
         <div class="episode-band {episode.color}"></div>
@@ -38,7 +61,7 @@
               class="status-badge {episode.status === 'Завершён'
                 ? 'done'
                 : 'watching'}">{episode.status}</span
-            ><button><MoreHorizontal size={19} /></button>
+            >
           </div>
           <h2>{episode.title}</h2>
           <p>{episode.subtitle}</p>
@@ -57,8 +80,10 @@
               >
             {/each}
           </div>
-          <button class="episode-open"
-            >Открыть эпизод <ChevronRight size={16} /></button
+          <button
+            class="episode-open"
+            on:click={() => onOpenEvent(sortEvents(episodeEvents)[0])}
+            >Последняя запись <ChevronRight size={16} /></button
           >
         </div>
       </article>

@@ -24,7 +24,7 @@
   const navItems = [
     ["dashboard", "Обзор", Home],
     ["history", "История", History],
-    ["episodes", "Эпизоды", Archive],
+    ["episodes", "По зубам", Archive],
     ["reports", "Отчёты", FileText],
   ];
 

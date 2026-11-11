@@ -53,7 +53,7 @@ select:focus-visible {
 .logo small {
   display: block;
   color: #899694;
-  font-size: 10px;
+  font-size: 14px;
   margin-top: 2px;
   letter-spacing: 0.25px;
 }
@@ -81,7 +81,7 @@ select:focus-visible {
   gap: 8px;
   padding: 0 17px;
   cursor: pointer;
-  font-size: 11px;
+  font-size: 14px;
   font-weight: 700;
   transition: 0.16s ease;
 }
@@ -117,7 +117,7 @@ select:focus-visible {
 .eyebrow {
   display: block;
   color: #16867f;
-  font-size: 9px;
+  font-size: 14px;
   letter-spacing: 1.3px;
   font-weight: 800;
   margin-bottom: 8px;
@@ -159,12 +159,12 @@ select:focus-visible {
   gap: 18px;
 }
 .card-head h2 {
-  font-size: 14px;
+  font-size: 16px;
   margin-bottom: 4px;
 }
 .card-head p {
   color: #8a9997;
-  font-size: 9px;
+  font-size: 14px;
   margin-bottom: 0;
 }
 .lower .tooth:hover {
@@ -236,10 +236,10 @@ select:focus-visible {
   display: block;
 }
 .event-date b {
-  font-size: 13px;
+  font-size: 16px;
 }
 .event-date small {
-  font-size: 7px;
+  font-size: 14px;
   text-transform: uppercase;
   color: #8b9997;
   margin-top: 1px;
@@ -285,10 +285,10 @@ select:focus-visible {
   text-overflow: ellipsis;
 }
 .event-main b {
-  font-size: 10px;
+  font-size: 14px;
 }
 .event-main small {
-  font-size: 8px;
+  font-size: 14px;
   color: #879693;
   margin-top: 5px;
 }
@@ -296,7 +296,7 @@ select:focus-visible {
   display: flex;
   gap: 6px;
   align-items: center;
-  font-size: 8px;
+  font-size: 14px;
   color: #7c8b89;
 }
 .row-chevron {
@@ -318,7 +318,7 @@ select:focus-visible {
 .status-badge {
   padding: 5px 8px;
   border-radius: 12px;
-  font-size: 7px;
+  font-size: 14px;
   font-weight: 700;
   white-space: nowrap;
 }
@@ -334,7 +334,7 @@ select:focus-visible {
   display: flex;
   align-items: center;
   gap: 8px;
-  font-size: 13px;
+  font-size: 16px;
   margin-bottom: 25px;
 }
 .paper-logo .logo-mark {
@@ -374,7 +374,7 @@ select:focus-visible {
   padding: 12px;
   text-align: center;
   border-radius: 7px;
-  font-size: 10px;
+  font-size: 14px;
   font-weight: 700;
 }
 .option-icon {
@@ -389,7 +389,7 @@ table {
 th {
   text-align: left;
   color: #92a09e;
-  font-size: 7px;
+  font-size: 14px;
   text-transform: uppercase;
   letter-spacing: 0.7px;
   border-bottom: 1px solid #e9efee;
@@ -398,7 +398,7 @@ th {
 td {
   padding: 11px 9px;
   border-bottom: 1px solid #eff3f2;
-  font-size: 8px;
+  font-size: 14px;
   color: #657572;
 }
 td b,
@@ -407,7 +407,7 @@ td small {
 }
 td b {
   color: #304643;
-  font-size: 9px;
+  font-size: 14px;
 }
 td small {
   color: #94a19f;
@@ -434,10 +434,10 @@ td small {
   color: #26867e;
 }
 .empty-state b {
-  font-size: 11px;
+  font-size: 14px;
 }
 .empty-state p {
-  font-size: 8px;
+  font-size: 14px;
   margin: 0;
   max-width: 230px;
   line-height: 1.5;
@@ -450,7 +450,7 @@ td small {
 .event-modal-title small {
   display: block;
   color: #7e8e8b;
-  font-size: 8px;
+  font-size: 14px;
   margin-bottom: 4px;
 }
 .event-modal-title h2 {
@@ -469,6 +469,6 @@ td small {
   display: flex;
   align-items: center;
   gap: 7px;
-  font-size: 9px;
+  font-size: 14px;
   box-shadow: 0 10px 30px rgba(12, 42, 38, 0.25);
 }

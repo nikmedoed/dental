@@ -151,7 +151,7 @@
     justify-content: center;
     align-items: center;
     gap: 3px;
-    font-size: 7px;
+    font-size: 14px;
     cursor: pointer;
   }
   .mobile-nav button.active {
@@ -257,32 +257,12 @@
     flex-wrap: wrap;
     justify-content: flex-end;
   }
-  .share-top-button {
-    display: none;
-  }
   .segmented button {
     padding: 6px 7px;
-  }
-  .teeth-row {
-    justify-content: center;
-    min-width: 0;
-    width: 100%;
-    padding: 0 8px;
-    gap: 1px;
-  }
-  .tooth {
-    width: auto;
-    min-width: 0;
-    flex: 1;
-    height: 53px;
   }
   .tooth-crown {
     width: clamp(17px, 4vw, 25px);
     height: 33px;
-  }
-  .tooth-figure {
-    width: clamp(18px, 4vw, 27px);
-    height: 36px;
   }
   .tooth-crown:before {
     width: 65%;
@@ -291,7 +271,7 @@
     width: 2px;
   }
   .tooth b {
-    font-size: 7px;
+    font-size: 14px;
   }
   .midline {
     width: 5px;
@@ -345,10 +325,10 @@
     height: 29px;
   }
   .event-main b {
-    font-size: 9px;
+    font-size: 14px;
   }
   .event-main small {
-    font-size: 7px;
+    font-size: 14px;
   }
   .toolbar {
     align-items: stretch;
@@ -375,7 +355,7 @@
     margin: 0 4px 5px;
   }
   .year-label b {
-    font-size: 14px;
+    font-size: 16px;
   }
   .year-label span {
     margin: 0;
@@ -417,7 +397,7 @@
     grid-template-columns: repeat(4, 1fr);
   }
   .kind-grid button {
-    font-size: 7px;
+    font-size: 14px;
   }
   .form-grid.two {
     grid-template-columns: 1fr 1fr;
@@ -462,7 +442,7 @@
     height: 34px;
   }
   .stat-card > div:nth-child(2) > span {
-    font-size: 8px;
+    font-size: 14px;
   }
   .kind-grid {
     grid-template-columns: repeat(2, 1fr);
@@ -551,7 +531,7 @@
   }
   .visit-tooth-picker button {
     height: 38px;
-    font-size: 11px;
+    font-size: 14px;
   }
   .tooth-picker-head,
   .surface-heading {

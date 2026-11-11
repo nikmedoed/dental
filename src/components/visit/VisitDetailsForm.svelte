@@ -3,6 +3,7 @@
   import { VISIT_TYPES } from "../../lib/dental-data.js";
   import AttachmentPicker from "./AttachmentPicker.svelte";
 
+  export let filesLoading = false;
   export let clinics = [];
   export let doctors = [];
   export let currencies = [];
@@ -52,7 +53,8 @@
       ><span>Врач <small>необязательно</small></span>
       <div class="select-wrap">
         <select bind:value={doctorId}
-          ><option value="">Не указан</option>{#each doctors as doctor}<option value={doctor.id}
+          ><option value="">Не указан</option>{#each doctors as doctor}<option
+              value={doctor.id}
               >{doctor.name}{doctor.specialty
                 ? ` · ${doctor.specialty}`
                 : ""}</option
@@ -95,7 +97,8 @@
       ><span>Клиника <small>необязательно</small></span>
       <div class="select-wrap">
         <select bind:value={clinicId}
-          ><option value="">Не указана</option>{#each clinics as clinic}<option value={clinic.id}
+          ><option value="">Не указана</option>{#each clinics as clinic}<option
+              value={clinic.id}
               >{clinic.name}{clinic.city ? ` · ${clinic.city}` : ""}</option
             >{/each}<option value={newValue}>＋ Добавить новую клинику</option
           ></select
@@ -161,6 +164,7 @@
     ></textarea></label
   >
   <AttachmentPicker
+    bind:loading={filesLoading}
     bind:attachments={visitAttachments}
     scope="visit"
     label="Прикрепить документы ко всему визиту"
